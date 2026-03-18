@@ -145,13 +145,14 @@ interactions = [
 
 | TF  |  Total de genes  | Genes activados | Genes reprimidos | Tipo de efecto | 
 |---|---|---|---|---|
-| AraC  |  2 | 1 | 1| Dual |  
+| AraC  | 2 | 1 | 1| Dual |  
 | LexA | 1  | 0 | 1 | Represor |
 
 
 - Resultados:
 ```
-
+AraC 2 1 1 Dual
+LexA 1 0 1 Represor
 ```
 
 ¿Coinciden con la salida esperada? Sí.
@@ -178,7 +179,7 @@ interactions = [
 
 - Resultados:
 ```
-
+CRP 3 3 0 Activador
 ```
 
 
@@ -205,12 +206,13 @@ interactions = [
 
 | TF  |  Total de genes  | Genes activados | Genes reprimidos | Tipo de efecto | 
 |---|---|---|
-| AraC | 2 | 1| 1 | Dual |  
-| LexA | 2 | 0| 2 | Represor |
+| AraC | 2 | 1 | 1 | Dual |  
+| LexA | 2 | 0 | 2 | Represor |
 
 - Resultados:
 ```
-
+AraC 2 1 1 Dual
+LexA 2 0 2 Represor
 ```
 
 
@@ -243,7 +245,9 @@ interactions = [
 
 - Resultados:
 ```
-
+AraC 2 1 1 Dual
+CRP 2 2 0 Activador
+LexA 1 0 1 Represor
 ```
 
 ¿Coinciden con la salida esperada? Sí.
