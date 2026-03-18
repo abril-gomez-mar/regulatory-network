@@ -17,14 +17,15 @@ interactions = [
 | TF  |  Total de genes  | Lista de genes | 
 |---|---|---|
 | AraC  |  2 |  araA, araB |  
-| LexA | recA  | - |
+| LexA | 1  | recA |
 
 
 - Resultados:
 ```
+AraC 2 araA, araB
+LexA 1 recA
 
 ```
-
 
 ¿Coinciden con la salida esperada? Sí.
 
@@ -46,11 +47,11 @@ interactions = [
 
 | TF  |  Total de genes  | Lista de genes | 
 |---|---|---|
-| CRP  |  3 |  lacZ, lazY, lacA |  
+| CRP  |  3 |  lacA, lacY, lacZ |  
 
 - Resultados:
 ```
-
+CRP 3 lacA, lacY, lacZ
 ```
 
 
@@ -76,12 +77,13 @@ interactions = [
 
 | TF  |  Total de genes  | Lista de genes | 
 |---|---|---|
-| LexA |  2 | recA, umuC |  
-|  AraC | 2 | araE, araA |
+| AraC | 2 | araA, araE |  
+| LexA | 2 | recA, umuC|
 
 - Resultados:
 ```
-
+AraC 2 araA, araE
+LexA 2 recA, umuC
 ```
 
 
@@ -114,8 +116,9 @@ interactions = [
 
 - Resultados:
 ```
-
+AraC 2 araA, araB
+CRP 2 lacY, lacZ
+LexA 1 recA
 ```
-
 
 ¿Coinciden con la salida esperada? Sí.
