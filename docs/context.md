@@ -5,20 +5,23 @@ Este proyecto analiza una red de regulación genética.
 
 Los datos contienen interacciones entre factores de transcripción (TF) y genes.
 
-Formato de los datos:
+**Formato de los datos:**
 
 TF gene effect
 
-Ejemplo:
-AraC araA + AraC araB - LexA recA - 
+**Ejemplo**
 
-Objetivo del programa:
+AraC araA + 
+AraC araB - 
+LexA recA - 
 
-Generar una tabla que indique para cada TF:
+**Objetivo del programa**
 
-Nombre del TF (esta solumna debe estar ordenada)
-total de genes regulados
-lista de genes regulados (ordenada) 
+Generar una tabla que, para cada TF, indique los siguientes datos:
+
+- Nombre del TF (esta columna debe estar ordenada)
+- Total de genes regulados
+- Lista de genes regulados (ordenada) 
 
 
 ```
