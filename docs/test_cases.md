@@ -129,6 +129,8 @@ LexA 1 recA
 
 ## Segunda versión del programa (extensión)
 
+Dado que se preservaron las dos versiones del código, se mostrarán los resultados completos al examinar cada caso de prueba.
+
 ### Primer caso
 
 - Entrada:
@@ -151,6 +153,10 @@ interactions = [
 
 - Resultados:
 ```
+AraC 2 araA, araB
+LexA 1 recA
+
+
 AraC 2 1 1 Dual
 LexA 1 0 1 Represor
 ```
@@ -171,7 +177,7 @@ interactions = [
 ]
 ```
 
-- Salida esperada:
+- Salida extra esperada:
 
 | TF  |  Total de genes  | Genes activados | Genes reprimidos | Tipo de efecto | 
 |---|---|---|---|---|
@@ -179,6 +185,9 @@ interactions = [
 
 - Resultados:
 ```
+CRP 3 lacA, lacY, lacZ
+
+
 CRP 3 3 0 Activador
 ```
 
@@ -202,7 +211,7 @@ interactions = [
 
 ```
 
-- Salida esperada:
+- Salida adicional esperada:
 
 | TF  |  Total de genes  | Genes activados | Genes reprimidos | Tipo de efecto | 
 |---|---|---|
@@ -211,6 +220,10 @@ interactions = [
 
 - Resultados:
 ```
+AraC 2 araA, araE
+LexA 2 recA, umuC
+
+
 AraC 2 1 1 Dual
 LexA 2 0 2 Represor
 ```
@@ -235,7 +248,7 @@ interactions = [
 
 ```
 
-- Salida esperada:
+- Salida adicional esperada:
 
 | TF  |  Total de genes  | Genes activados | Genes reprimidos | Tipo de efecto | 
 |---|---|---|---|---|
@@ -245,6 +258,11 @@ interactions = [
 
 - Resultados:
 ```
+AraC 2 araA, araB
+CRP 2 lacY, lacZ
+LexA 1 recA
+
+
 AraC 2 1 1 Dual
 CRP 2 2 0 Activador
 LexA 1 0 1 Represor

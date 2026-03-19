@@ -9,8 +9,28 @@ interactions = [
 
 regulon = {}  
 
+# Primera parte del análisis. 
+# Se recorren las tuplas y se construye un diccionario. Cada llave será un TF; sus valores, los genes que regula. 
 # De nuevo, se recorren las tuplas y se construye un diccionario. 
 # Cada llave será un TF, pero sus valores serán tuplas con esta estructura: (gen, efecto del TF).
+for TF, gene, effect in interactions:
+    if TF not in regulon:
+        regulon[TF] = []
+    regulon[TF].append(gene)
+
+for TF in sorted(regulon):
+    genes = sorted(regulon[TF])
+    total = len(genes)
+    lista_genes = ", ".join(genes)    
+    print(TF, total, lista_genes)
+
+# Se decidió añadir una línea en blanco para separar ambas tablas.
+print("\n")
+
+# De nuevo, se recorren las tuplas y se construye un diccionario. Para no emplear demasiadas variables, se reusó el nombre del diccionario.
+# Cada llave será un TF, pero sus valores serán tuplas con esta estructura: (gen, efecto del TF).
+regulon = {}  
+
 for TF, gene, effect in interactions:
     if TF not in regulon:
         regulon[TF] = []
