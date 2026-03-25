@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>archivos_niveles</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb
+}
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+  body {
+    padding: 2cm; 
+  }
+}
+</style>
+
+
+</head>
+
+<body>
+
+<h1 id="toc_0">Datos reales: lectura, organización y validación - Archivos</h1>
+
+<h2 id="toc_1">Antes de empezar</h2>
+
+<p>En esta sesión continuamos con el mismo flujo de trabajo:</p>
+
+<ol>
+<li>entender el problema</li>
+<li>definir requisitos</li>
+<li>revisar casos de prueba</li>
+<li>diseñar la lógica</li>
+<li>identificar estructuras</li>
+<li>implementar</li>
+<li>extender</li>
+</ol>
+
+<p>Ahora agregamos un elemento clave del mundo real: <strong>los datos vienen de un archivo externo</strong>.</p>
+
+<p>Este cambio es importante porque transforma completamente cómo diseñamos el programa: ya no controlamos los datos, ahora debemos <strong>leerlos, interpretarlos y validarlos</strong>. Esto introduce una nueva responsabilidad: asegurar que los datos que usamos son correctos y consistentes.</p>
+
+<hr>
+
+<h2 id="toc_2">🎯 Objetivos de la lección</h2>
+
+<h3 id="toc_3">🟢 Básico</h3>
+
+<ul>
+<li><strong>Identificar</strong> la estructura de un archivo TSV</li>
+<li><strong>Aplicar</strong> la lectura de archivos en Python línea por línea</li>
+<li><strong>Ejecutar</strong> limpieza y filtrado de datos</li>
+<li><strong>Construir</strong> una lista de interacciones <code>(TF, gene, effect)</code></li>
+</ul>
+
+<h3 id="toc_4">🟡 Intermedio</h3>
+
+<ul>
+<li><strong>Analizar</strong> el formato y calidad de los datos con Unix</li>
+<li><strong>Distinguir</strong> datos válidos e inválidos</li>
+<li><strong>Organizar</strong> el flujo sin romper código previo</li>
+<li><strong>Modificar</strong> validaciones y estructura</li>
+</ul>
+
+<h3 id="toc_5">🔴 Avanzado</h3>
+
+<ul>
+<li><strong>Evaluar</strong> soluciones (propias/IA)</li>
+<li><strong>Diseñar</strong> casos de prueba adicionales</li>
+<li><strong>Proponer</strong> mejoras de robustez</li>
+<li><strong>Justificar</strong> decisiones de diseño</li>
+</ul>
+
+<hr>
+
+<h2 id="toc_6">🧭 Ruta mínima (qué debes lograr)</h2>
+
+<ul>
+<li>Leer el archivo TSV</li>
+<li>Ignorar líneas inválidas</li>
+<li>Construir <code>interactions</code></li>
+<li>Generar archivo de salida</li>
+</ul>
+
+<hr>
+
+<h2 id="toc_7">1. Problema</h2>
+
+<p>Hasta ahora el programa funciona con datos escritos directamente en el código:</p>
+
+<div><pre><code class="language-python">interactions = [
+    (&quot;AraC&quot;, &quot;araA&quot;, &quot;+&quot;),
+    (&quot;AraC&quot;, &quot;araB&quot;, &quot;-&quot;),
+    (&quot;LexA&quot;, &quot;recA&quot;, &quot;-&quot;)
+]</code></pre></div>
+
+<p>En la práctica, los datos provienen de bases como <strong>RegulonDB</strong>, y vienen en archivos que debemos procesar.</p>
+
+<p><strong>Nuevo objetivo</strong>:</p>
+
+<ul>
+<li><p>Leer un archivo real (TSV) con interacciones regulatorias, validarlo y convertirlo a la misma estructura usada en la lección anterior.</p></li>
+<li><p>El resultado mandarlo a un archivo de salida.</p></li>
+</ul>
+
+<p>🟢  Descarga el archivo desde la página de RegulonDB (https://regulondb.ccg.unam.mx/datasets Seccion Regulatory Network, NetworkRegulatorGene ) </p>
+
+<hr>
+
+<h2 id="toc_8">2. Organización del proyecto</h2>
+
+<p>Queremos adicionar esta organización al proyecto para manejar el archivo y los resultados :</p>
+
+<div><pre><code class="language-none">data/
+  raw/
+    NetworkRegulatorGene.tsv
+  README.md
+results/</code></pre></div>
+
+<p>🟢 Crea directorios y coloca el archivo en <code>data/raw/</code></p>
+
+<p>🟡 Documenta el dataset en <code>data/README.md</code></p>
+
+<p>🔴 Justifica tu organización (nombres, rutas)</p>
+
+<hr>
+
+<h2 id="toc_9">3. Explorar los datos</h2>
+
+<p>Inspeccionar los datos es importante porque <strong>no podemos procesar y documentar correctamente algo que no entendemos aún</strong>.</p>
+
+<p>🟢 Usa comandos que ya conoces:</p>
+
+<div><pre><code class="language-bash">head data/raw/NetworkRegulatorGene.tsv
+tail data/raw/NetworkRegulatorGene_v14.5.tsv
+wc -l data/raw/NetworkRegulatorGene.tsv
+cut -f1-5 data/raw/NetworkRegulatorGene.tsv | less -S</code></pre></div>
+
+<p>🟡 Responde:
+- ¿hay encabezado?
+- ¿hay líneas vacías?
+- ¿todas las filas tienen el mismo número de columnas?
+- ¿qué columnas necesitamos realmente?
+- ¿qué valores aparecen en &quot;effect&quot;?</p>
+
+<p>🔴 Detecta inconsistencias reales en el archivo</p>
+
+<hr>
+
+<h2 id="toc_10">4. Documentar el dataset (data/README.md)</h2>
+
+<p>Guardar el metadata del archivo evita errores posteriores y mejora la trazabilidad del proyecto.</p>
+
+<p>Completa la información sihace falta:</p>
+
+<div><pre><code class="language-markdown"># Dataset: Regulatory interactions (RegulonDB)
+
+## Fuente
+RegulonDB
+
+## Archivo
+NetworkRegulatorGene.tsv
+
+## Versión
+
+
+## Formato
+TSV (tab-separated values)
+
+## Columnas relevantes
+- regulatorName
+- regulatedName
+- function
+
+## Observaciones
+- el archivo tiene encabezado
+- puede tiene columnas adicionales
+- solo se usarán tres columnas en este proyecto
+- La columna de efecto puede tener los siguiente valores: +, -, 
+- </code></pre></div>
+
+<hr>
+
+<h2 id="toc_11">5. Requisitos</h2>
+
+<p>En esta etapa no estamos escribiendo un programa desde cero.<br>
+Estamos <strong>extendiendo un programa que ya funciona</strong>.</p>
+
+<p>Esto implica una buena práctica importante:</p>
+
+<blockquote>
+<p><strong>No romper lo que ya funciona.</strong></p>
+</blockquote>
+
+<p>Al agregar nuevas funcionalidades, es recomendable:</p>
+
+<ul>
+<li>mantener la lógica existente intacta</li>
+<li>agregar cambios de forma incremental</li>
+<li>reutilizar estructuras ya definidas (por ejemplo, <code>interactions</code>)</li>
+<li>asegurar que la nueva entrada (archivo) produzca el mismo formato que antes</li>
+<li>validar que los casos de prueba anteriores siguen funcionando</li>
+</ul>
+
+<p>Otra idea clave:</p>
+
+<blockquote>
+<p><strong>El objetivo no es cambiar el programa, sino cambiar la fuente de los datos.</strong></p>
+</blockquote>
+
+<p>Antes:
+<code>python
+interactions = [(TF, gene, effect), ...]
+</code></p>
+
+<p>Ahora:</p>
+
+<div><pre><code class="language-python">interactions = leer_archivo(...)</code></pre></div>
+
+<p>Si logramos eso, el resto del programa no necesita modificarse.</p>
+
+<h3 id="toc_12">Requisitos</h3>
+
+<p>Ahora que entendemos el archivo (después de explorarlo), podemos definir correctamente qué debe hacer el programa.</p>
+
+<p>El programa debe:</p>
+
+<ul>
+<li>leer el archivo línea por línea</li>
+<li>ignorar encabezados o comentarios</li>
+<li>limpiar cada línea (espacios y saltos de línea)</li>
+<li>validar columnas</li>
+<li>extraer:
+
+<ul>
+<li>TF</li>
+<li>gene</li>
+<li>effect</li>
+</ul></li>
+<li>validar que effect sea &#39;+&#39; o &#39;-&#39;</li>
+<li>construir:</li>
+</ul>
+
+<div><pre><code class="language-python">interactions = [(TF, gene, effect), ...]</code></pre></div>
+
+<ul>
+<li>reutilizar el código previo para construir el regulon</li>
+<li>generar una salida en formato texto</li>
+<li>guardar los resultados en un archivo</li>
+</ul>
+
+<p>Este resultado debe ser compatible con el programa de la lección anterior.</p>
+
+<hr>
+
+<h2 id="toc_13">🔧 Alternativa opcional: planificación con apoyo de IA</h2>
+
+<p>Esta sección es opcional.</p>
+
+<p>Su propósito es mostrar una forma de <strong>pensar antes de programar</strong>, especialmente cuando el problema empieza a crecer o cuando no está claro por dónde comenzar.</p>
+
+<p>En algunas herramientas de IA, como Cursor o Copilot, existe una funcionalidad tipo <em>Plan</em>, donde puedes describir el problema y pedir una estrategia de implementación antes de escribir código.</p>
+
+<h3 id="toc_14">Ejemplo</h3>
+
+<div><pre><code class="language-prompt">Quiero modificar mi programa para que lea el archivo TSV (data/raw/NetworkRegulatorGene.tsv), valide su contenido, construya la red de regulación y guarde los resultados en un archivo.</code></pre></div>
+
+<p>También puedes pedir explícitamente que no escriba código todavía:</p>
+
+<div><pre><code class="language-prompt">Quiero modificar mi programa para que lea el archivo TSV (data/raw/NetworkRegulatorGene.tsv), valide su contenido, construya la red de regulación y guarde los resultados en un archivo.
+
+No escribas código todavía.
+Dame un plan de implementación paso a paso.
+Incluye validación de datos y generación de salida.</code></pre></div>
+
+<p>La herramienta puede proponer algo como:</p>
+
+<ul>
+<li>abrir archivo</li>
+<li>recorrer líneas</li>
+<li>limpiar datos</li>
+<li>validar columnas</li>
+<li>construir estructura de datos</li>
+<li>generar salida</li>
+<li>guardar resultados</li>
+</ul>
+
+<blockquote>
+<p>Idea importante: La IA no reemplaza el pensamiento, lo hace explícito.</p>
+</blockquote>
+
+<h3 id="toc_15">Plan de implementación</h3>
+
+<p>Aunque no uses IA, puedes hacer esta planificación por tu cuenta.</p>
+
+<p>Una forma razonable de dividir el problema es:</p>
+
+<ul>
+<li>abrir el archivo</li>
+<li>recorrer cada línea</li>
+<li>limpiar la línea</li>
+<li>ignorar líneas vacías</li>
+<li>separar columnas</li>
+<li>validar número de columnas</li>
+<li>extraer TF, gene y effect</li>
+<li>validar effect</li>
+<li>construir la lista de interacciones</li>
+<li>reutilizar el código previo para construir el regulon</li>
+<li>generar el formato de salida</li>
+<li>guardar los resultados en un archivo</li>
+</ul>
+
+<p>Este plan funciona como un <strong>algoritmo general de trabajo</strong>: describe qué debe hacer el programa antes de pasar al código.</p>
+
+<h4 id="toc_16">Buena práctica</h4>
+
+<p>Si usas IA para generar un plan, no lo aceptes automáticamente. Revísalo críticamente:</p>
+
+<ul>
+<li>¿el plan cubre todos los requisitos?</li>
+<li>¿incluye la generación de salida?</li>
+<li>¿maneja errores?</li>
+<li>¿es consistente con el programa existente?</li>
+</ul>
+
+<p>El objetivo no es copiar el plan, sino <strong>evaluarlo y usarlo como apoyo para pensar mejor la solución</strong>.</p>
+
+<hr>
+
+<h2 id="toc_17">6. Diseño</h2>
+
+<p>Antes de escribir código, define cómo resolverás la <strong>nueva funcionalidad del programa</strong>:</p>
+
+<p>👉 leer el archivo y construir la lista:</p>
+
+<p>interactions = [(TF, gene, effect), ...]</p>
+
+<p>⚠️ Importante:</p>
+
+<p>El resto del programa ya existe y ya funciona:
+- calcula número de genes
+- distingue activador / represor
+- genera la salida en pantalla</p>
+
+<p>👉 No debes rediseñar eso.</p>
+
+<p>Tu diseño se enfoca únicamente en:
+<strong>cómo obtener correctamente <code>interactions</code> desde el archivo.</strong></p>
+
+<h3 id="toc_18">🟢 Básico</h3>
+
+<p>Escribe un pseudocódigo del flujo general:</p>
+
+<ul>
+<li>leer archivo</li>
+<li>recorrer líneas</li>
+<li>limpiar datos</li>
+<li>validar</li>
+<li>extraer información</li>
+<li>construir <code>interactions</code></li>
+<li>generar salida</li>
+</ul>
+
+<p>Este pseudocódigo representa tu plan para la nueva entrada de datos.</p>
+
+<h3 id="toc_19">🟡 Intermedio</h3>
+
+<p>Refina tu diseño respondiendo:</p>
+
+<ul>
+<li>¿cómo identificarás líneas válidas?</li>
+<li>¿en qué orden validarás los datos?</li>
+<li>¿qué columnas usarás y por qué?</li>
+</ul>
+
+<h3 id="toc_20">🔴 Avanzado</h3>
+
+<p>Profundiza en decisiones de diseño:</p>
+
+<ul>
+<li>¿cómo evitar depender de índices fijos?</li>
+<li>¿cómo manejarás errores (descartar vs fallar)?</li>
+<li>¿tu diseño funcionaría si cambia el formato del archivo?</li>
+</ul>
+
+<p>💡 Nota</p>
+
+<p>Si te cuesta construir este pseudocódigo, puedes apoyarte en la sección:</p>
+
+<p><strong>“Alternativa opcional: planificación con apoyo de IA”</strong></p>
+
+<p>La IA puede ayudarte a generar o mejorar un plan, pero tu objetivo es entenderlo y poder explicarlo.</p>
+
+<hr>
+
+<h2 id="toc_21">7. Casos de prueba</h2>
+
+<p>Estos casos de prueba se enfocan en la <strong>nueva funcionalidad</strong> del programa:</p>
+
+<ul>
+<li>leer el archivo</li>
+<li>validar su contenido</li>
+<li>construir <code>interactions</code></li>
+<li>integrar esa lista con el programa anterior</li>
+<li>generar un archivo de salida</li>
+</ul>
+
+<h3 id="toc_22">🟢 Básico</h3>
+
+<h4 id="toc_23">1. Archivo válido (caso feliz)</h4>
+
+<p><strong>Condición</strong><br>
+El archivo existe, se puede leer y contiene datos con el formato esperado.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- lectura línea por línea
+- limpieza básica
+- extracción de columnas correctas
+- construcción de <code>interactions</code></p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- el programa procesa el archivo sin errores
+- construye correctamente la lista de interacciones
+- el resto del programa puede usar esa lista sin modificarse
+- se genera el archivo de salida</p>
+
+<h4 id="toc_24">2. Líneas de comentario</h4>
+
+<p><strong>Condición</strong><br>
+El archivo contiene líneas que comienzan con <code>#</code>.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- que el programa distingue metadatos de datos reales</p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- esas líneas se ignoran completamente
+- no se intentan separar en columnas
+- no generan errores</p>
+
+<h4 id="toc_25">3. Encabezado presente</h4>
+
+<p><strong>Condición</strong><br>
+El archivo contiene una línea con nombres de columnas.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- que el encabezado no se procese como una interacción</p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- el encabezado se ignora
+- no aparece como parte de <code>interactions</code></p>
+
+<h4 id="toc_26">4. Línea vacía</h4>
+
+<p><strong>Condición</strong><br>
+El archivo contiene una o más líneas vacías.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- limpieza de entrada
+- manejo de líneas sin contenido</p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- las líneas vacías se ignoran
+- no provocan errores
+- no agregan elementos incorrectos a <code>interactions</code></p>
+
+<h4 id="toc_27">5. Valor inválido en <code>effect</code></h4>
+
+<p><strong>Condición</strong><br>
+Una fila tiene un valor distinto de <code>+</code> o <code>-</code> en la columna de efecto.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- validación de contenido</p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- esa fila no se incluye en <code>interactions</code>
+- el programa continúa con el resto del archivo</p>
+
+<h3 id="toc_28">🟡 Intermedio</h3>
+
+<h4 id="toc_29">6. Número insuficiente de columnas</h4>
+
+<p><strong>Condición</strong><br>
+Una fila tiene menos columnas de las necesarias.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- validación de estructura antes de acceder a índices</p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- esa línea se descarta
+- el programa no falla con <code>IndexError</code>
+- las demás líneas válidas siguen procesándose</p>
+
+<p><strong>Ejemplo de línea problemática</strong></p>
+
+<div><pre><code class="language-text">AraC    araA</code></pre></div>
+
+<h4 id="toc_30">7. Archivo no existe</h4>
+
+<p><strong>Condición</strong><br>
+La ruta del archivo es incorrecta o el archivo fue movido/eliminado.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- manejo de error al abrir archivo</p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- el programa muestra un mensaje claro
+- termina de forma controlada
+- no sigue ejecutándose como si el archivo existiera</p>
+
+<p><strong>Ejemplo esperado</strong></p>
+
+<div><pre><code class="language-text">Error: archivo no encontrado data/raw/NetworkRegulatorGene.tsv</code></pre></div>
+
+<h4 id="toc_31">8. Archivo sin permisos de lectura</h4>
+
+<p><strong>Condición</strong><br>
+El archivo existe, pero el programa no tiene permisos para leerlo.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- manejo de errores de acceso</p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- se informa claramente el problema
+- el programa termina de forma controlada</p>
+
+<h4 id="toc_32">9. Integración con el programa anterior</h4>
+
+<p><strong>Condición</strong><br>
+La lista <code>interactions</code> fue construida a partir del archivo.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- compatibilidad con el código previo</p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- el programa anterior sigue funcionando sin cambios importantes
+- se obtienen:
+  - TF
+  - total de genes regulados
+  - número de genes activados
+  - número de genes reprimidos
+  - tipo general del TF</p>
+
+<h3 id="toc_33">🔴 Avanzado</h3>
+
+<h4 id="toc_34">10. Archivo de salida generado</h4>
+
+<p><strong>Condición</strong><br>
+La ejecución termina correctamente.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- escritura de resultados
+- consistencia del formato de salida</p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- se crea el archivo de salida
+- contiene la información esperada en el formato definido
+- puede abrirse y revisarse después</p>
+
+<p><strong>Ejemplo de salida</strong></p>
+
+<div><pre><code class="language-text">AraC    2   1   1   dual    araA, araB</code></pre></div>
+
+<h4 id="toc_35">11. Interacciones duplicadas</h4>
+
+<p><strong>Condición</strong><br>
+El archivo contiene dos filas idénticas.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- si el programa conserva o elimina duplicados</p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- debe ser consistente con la decisión de diseño
+- el alumno debe explicar qué comportamiento eligió</p>
+
+<h4 id="toc_36">12. Archivo con columnas en diferente orden</h4>
+
+<p><strong>Condición</strong><br>
+El archivo conserva los mismos nombres de columna, pero cambia su posición.</p>
+
+<p><strong>Qué se prueba</strong><br>
+- qué tan rígido o robusto es el diseño</p>
+
+<p><strong>Comportamiento esperado</strong><br>
+- si el diseño depende de índices fijos, probablemente falle
+- si usa nombres de columna, debería seguir funcionando</p>
+
+<hr>
+
+<h2 id="toc_37">🔧 Alternativa opcional: extender casos de prueba con IA</h2>
+
+<p>Esta sección es opcional. Úsala si quieres apoyarte en IA para <strong>ampliar</strong> (no reemplazar) tus casos de prueba.</p>
+
+<p>En el programa original, los datos estaban en el código (lista de tuplas). Ahora el programa:</p>
+
+<ul>
+<li>lee datos desde un archivo TSV</li>
+<li>valida la entrada</li>
+<li>maneja errores de lectura</li>
+<li>genera un archivo de salida</li>
+</ul>
+
+<p>👉 Por lo tanto, los casos de prueba deben <strong>extenderse</strong> para cubrir estos cambios.</p>
+
+<hr>
+
+<h3 id="toc_38">🟢 Básico</h3>
+
+<p>Usa IA para proponer nuevos casos a partir de los existentes.</p>
+
+<div><pre><code class="language-prompt">Tengo un conjunto de casos de prueba para un programa en Python que construye un regulon a partir de una lista de interacciones.
+
+Ahora el programa ha cambiado:
+
+- ya no usa datos en el código
+- ahora lee un archivo TSV (data/raw/NetworkRegulatorGene.tsv)
+- ignora comentarios (#)
+- ignora encabezados
+- valida columnas
+- maneja errores (archivo no existe, permisos)
+- genera un archivo de salida
+
+Quiero que extiendas los casos de prueba existentes.
+
+No los reemplaces.
+
+Agrega nuevos casos que cubran:
+
+- lectura de archivos
+- errores de entrada
+- validación de datos
+- generación del archivo de salida
+
+Para cada nuevo caso incluye:
+
+- descripción
+- entrada
+- comportamiento esperado
+- salida esperada (cuando sea posible)
+
+No escribas código.</code></pre></div>
+
+<h3 id="toc_39">🟡 Intermedio</h3>
+
+<p>Revisa críticamente la propuesta de la IA:</p>
+
+<ul>
+<li>¿los nuevos casos cubren los nuevos requisitos?</li>
+<li>¿son consistentes con los casos anteriores?</li>
+<li>¿la salida esperada tiene sentido?</li>
+</ul>
+
+<p>Ajusta o corrige lo necesario.</p>
+
+<h3 id="toc_40">🔴 Avanzado</h3>
+
+<ul>
+<li>Identifica al menos <strong>2 escenarios faltantes</strong> y agrégalos (por ejemplo: duplicados, columnas reordenadas).</li>
+<li>Explica por qué esos casos son importantes.</li>
+<li>Mejora la redacción de los casos para que sean ejecutables y verificables.</li>
+</ul>
+
+<p>💡 Idea clave</p>
+
+<p>La IA puede ayudarte a generar ideas, pero tu tarea es <strong>evaluarlas y completarlas</strong>.</p>
+
+<hr>
+
+<h2 id="toc_41">8. Implementación</h2>
+
+<p>En esta sección implementamos la <strong>nueva funcionalidad</strong> del programa:
+leer el archivo, validar datos, construir <code>interactions</code> y guardar resultados.</p>
+
+<h3 id="toc_42">🟢 Básico — Lectura y flujo principal</h3>
+
+<p>Para resolver el problema necesitamos leer archivos.</p>
+
+<h4 id="toc_43">leer archivos</h4>
+
+<p>Un <strong>archivo</strong> es una colección de datos almacenados en disco. A diferencia de las variables en Python, los archivos <strong>persisten</strong> aunque el programa termine.</p>
+
+<p>Leer un archivo implica:   </p>
+
+<ul>
+<li>abrirlo</li>
+<li>recorrer su contenido</li>
+<li>cerrarlo correctamente</li>
+</ul>
+
+<p><strong><code>open(&quot;ruta_del_archivo&quot;)</code></strong></p>
+
+<ul>
+<li>se usa para <strong>abrir un archivo</strong></li>
+<li>recibe como argumento la ruta del archivo y el modo.</li>
+</ul>
+
+<div><pre><code class="language-python">open(&quot;ruta&quot;, &quot;modo&quot;)</code></pre></div>
+
+<p>Por ejemplo</p>
+
+<div><pre><code class="language-python">open(&quot;data/raw/NetworkRegulatorGene.tsv&quot;)</code></pre></div>
+
+<p>Por defecto, abre el archivo en modo lectura (<code>&quot;r&quot;</code>).</p>
+
+<p>Para escritura, se usa &quot;w&quot; :</p>
+
+<div><pre><code class="language-python">open(&quot;data/raw/output.txt&quot;, &quot;w&quot;)</code></pre></div>
+
+<p>** <code>with open(...) as f</code> **</p>
+
+<ul>
+<li><code>with</code> es una estructura especial para manejar recursos (como archivos)</li>
+<li><code>as f</code> asigna el archivo a una variable (<code>f</code>)</li>
+</ul>
+
+<p>👉 Esto significa:</p>
+
+<blockquote>
+<p>“abre el archivo y guárdalo en <code>f</code> para poder usarlo”</p>
+</blockquote>
+
+<p>La estructura <code>with</code> asegura que:</p>
+
+<ul>
+<li>el archivo se abre correctamente</li>
+<li>el archivo se cierra automáticamente al terminar</li>
+</ul>
+
+<div><pre><code class="language-python">with open(&quot;data/raw/NetworkRegulatorGene.tsv&quot;) as f:
+    for line in f:
+        print(line)</code></pre></div>
+
+<h4 id="toc_44">Quitar los saltos de línea</h4>
+
+<p>La variable <strong>line</strong> :</p>
+
+<p>✔ representa una línea completa del archivo.<br>
+✔ es un <code>string</code>.<br>
+✔ incluye el salto de línea (\n).<br>
+✔ normalmente se limpia con .strip().  </p>
+
+<div><pre><code class="language-python">line = &quot;AraC    araA    +
+&quot;
+print(line.strip())</code></pre></div>
+
+<p>Elimina espacios y saltos de línea al inicio y final.</p>
+
+<h4 id="toc_45">Líneas vacías</h4>
+
+<p>Los archivos reales pueden contener:</p>
+
+<ul>
+<li>líneas en blanco<br></li>
+<li>espacios innecesarios<br></li>
+<li>saltos de línea adicionales<br></li>
+</ul>
+
+<p>Si no las ignoramos:</p>
+
+<ul>
+<li><code>split()</code> puede fallar o producir listas vacías<br></li>
+<li>podemos introducir datos incorrectos<br></li>
+<li>el programa puede comportarse de forma inesperada<br></li>
+</ul>
+
+<p>Después de limpiar la línea con <code>.strip()</code> podemos:</p>
+
+<div><pre><code class="language-python">if not line:
+    continue</code></pre></div>
+
+<p>En Python, una cadena vacía, se evalúa como <code>False</code> (truthiness).</p>
+
+<h4 id="toc_46">Saltar los comentarios y encabezado</h4>
+
+<p>Muchos archivos en bioinformática, traen un encabezado con metadatos, y pueden incluir los nombres de las columnas, por eso es recomendable ignorarlas cuando se quieren hacer los conteos o procesar las lineas de datos.</p>
+
+<div><pre><code class="language-python">            # ignorar comentarios
+            if line.startswith(&quot;#&quot;):
+                continue
+            
+            # ignorar encabezado
+            if line.startswith(&quot;regulatorId&quot;):
+                continue</code></pre></div>
+
+<h4 id="toc_47">Separar columnas y validar estructura</h4>
+
+<div><pre><code class="language-python">              fields = line.split(&quot;\t&quot;)
+            
+            # validar número mínimo de columnas
+            if len(fields) &lt; 6:
+                continue
+            
+            TF = fields[1]
+            gene = fields[3]
+            effect = fields[4]</code></pre></div>
+
+<p>Estos pasos permiten transformar texto en datos estructurados.</p>
+
+<h4 id="toc_48">Extraer datos y validar contenido (efecto)</h4>
+
+<p>Solo aceptaremos interacciones que indique el tipo de efecto.</p>
+
+<div><pre><code class="language-python">            # validar effect
+            if effect not in [&quot;+&quot;, &quot;-&quot;]:
+                continue
+</code></pre></div>
+
+<h3 id="toc_49">🟡 Intermedio — Manejo de errores y buenas practicas</h3>
+
+<h4 id="toc_50">Validar existencia de archivo</h4>
+
+<div><pre><code class="language-python">with open(&quot;archivo_inexistente.txt&quot;) as f:
+    pass</code></pre></div>
+
+<p>Esto produce un error:</p>
+
+<div><pre><code class="language-none">FileNotFoundError</code></pre></div>
+
+<p>👉 Significa que Python no encontró el archivo en la ruta especificada.</p>
+
+<p><strong>Buena práctica</strong></p>
+
+<p>Validar la existencia del archivo</p>
+
+<div><pre><code class="language-python">import os
+
+filename = &quot;data/raw/NetworkRegulatorGene.tsv&quot;
+
+if not os.path.exists(filename):
+    print(&quot;Error: archivo no encontrado&quot;)
+    exit(1)
+else:
+    with open(filename) as f:
+        for line in f:
+            print(line)</code></pre></div>
+
+<h4 id="toc_51"><code>exit()</code></h4>
+
+<p>Se usa cuando ocurre <strong>un error crítico</strong> y no tiene sentido continuar.</p>
+
+<p>Cuando Python ejecuta exit(1): 👉 termina el programa inmediatamente</p>
+
+<p>El número indica el código de salida del programa: </p>
+
+<ul>
+<li>exit(0) → el programa terminó correctamente.<br></li>
+<li>exit(1) → ocurrió un error.<br></li>
+<li>otros números → distintos tipos de error (por convención)</li>
+</ul>
+
+<p>¿Quién usa ese número?</p>
+
+<ul>
+<li>el sistema operativo.<br></li>
+<li>otros programas o scripts.<br></li>
+<li>herramientas de automatización.<br></li>
+</ul>
+
+<p>👉 permite saber si el programa falló o no</p>
+
+<h2 id="toc_52">10. Integración con el programa anterior</h2>
+
+<p>El objetivo NO es escribir un programa nuevo.</p>
+
+<p>Es reutilizar lo que ya tenemos:</p>
+
+<div><pre><code class="language-none">archivo → lista de tuplas → regulon → salida</code></pre></div>
+
+<div><pre><code class="language-python">import os
+
+# =========================================
+# Lectura del archivo y construcción de interactions
+# =========================================
+
+interactions = []
+
+filename = &quot;data/raw/NetworkRegulatorGene.tsv&quot;
+
+if not os.path.exists(filename):
+    print(&quot;Error: archivo no encontrado&quot;)
+    exit(1)
+else:
+    with open(filename) as f:
+
+        for line in f:
+
+            line = line.strip()
+
+            print(f&quot;Leído: {line[:50]}...&quot;)
+
+            # Ignorar líneas vacías
+            if not line:
+                continue
+
+            # Ignorar comentarios
+            if line.startswith(&quot;#&quot;):
+                continue
+
+            # Ignorar encabezado
+            if line.startswith(&quot;1)regulatorId&quot;):
+                continue
+
+            fields = line.split(&quot;\t&quot;)
+
+            # Validar número mínimo de columnas
+            if len(fields) &lt;= 7:
+                continue
+
+              # columnas a utilizar
+            TF = fields[1]
+            gene = fields[3]
+            effect = fields[4]
+
+            # Validar effect
+            if effect not in [&quot;+&quot;, &quot;-&quot;]:
+                continue
+
+            interactions.append((TF, gene, effect))
+
+print(interactions)
+
+# resto del programa</code></pre></div>
+
+<p>Este código transforma un archivo en una estructura usable.</p>
+
+<h4 id="toc_53">Commit y probar</h4>
+
+<p>Guarda los cambios siguiendo las buenas practicas para el commit. Y prueba este cambio.</p>
+
+<h3 id="toc_54">Guardar resultados en archivo</h3>
+
+<p>Hasta ahora imprimimos resultados en pantalla.</p>
+
+<p>Ahora queremos guardarlos en un archivo.</p>
+
+<h4 id="toc_55">Verificar que exista directorio</h4>
+
+<div><pre><code class="language-python">with open(&quot;output.txt&quot;, &quot;w&quot;) as f:
+    f.write(&quot;AraC 2 araA, araB
+&quot;)</code></pre></div>
+
+<p>Cuando queremos guardar un archivo en una carpeta, esa carpeta debe existir.</p>
+
+<p>Si la carpeta results/ no existe, Python dará un error.</p>
+
+<div><pre><code class="language-python">output_file = &quot;results/regulon_summary.tsv&quot;
+os.makedirs(os.path.dirname(output_file),exist_ok=True)</code></pre></div>
+
+<ul>
+<li><p>os.makedirs(...)
+→ crea directorios (carpetas)</p></li>
+<li><p>os.path.dirname(output_file)
+→ obtiene solo la carpeta (results/)</p></li>
+<li><p>exist_ok=True
+→ evita error si la carpeta ya existe</p></li>
+</ul>
+
+<div><pre><code class="language-python">os.makedirs(&quot;results&quot;, exist_ok=True)</code></pre></div>
+
+<ul>
+<li>si no existe → la crea.<br></li>
+<li>si ya existe → no pasa nada</li>
+</ul>
+
+<h4 id="toc_56">Guardar los resultados en un archivo</h4>
+
+<p>👉 Guardarlos en un archivo permite:</p>
+
+<ul>
+<li>compartir resultados.<br></li>
+<li>analizarlos con otras herramientas.<br></li>
+<li>mantener un registro</li>
+</ul>
+
+<h4 id="toc_57"><code>out.write()</code></h4>
+
+<div><pre><code class="language-python">out.write(&quot;texto&quot;)</code></pre></div>
+
+<p>👉 escribe texto dentro del archivo</p>
+
+<p>Imprimimos el encabezado</p>
+
+<div><pre><code class="language-python">with open(output_file, &quot;w&quot;) as out:
+    out.write(&quot;TF\tTotal genes\tActivados\tReprimidos\tTipo\tLista de genes\n&quot;)</code></pre></div>
+
+<p>y lo mismo al final, para imprimir el resultado</p>
+
+<div><pre><code class="language-python">        lista_genes = &quot;, &quot;.join(genes)
+        out.write(f&quot;{TF}\t{total}\t{activados}\t{reprimidos}\t{tipo}\t{lista_genes}\n&quot;)
+</code></pre></div>
+
+<h2 id="toc_58">🔧 Implementación con IA (opcional)</h2>
+
+<h3 id="toc_59">🎯 Objetivo</h3>
+
+<p>Usar una herramienta de IA como apoyo para completar partes pendientes del programa, sin perder de vista los requisitos ni la comprensión del código.</p>
+
+<h3 id="toc_60">🟢 Básico</h3>
+
+<p>Partimos de estos <code>TODO</code>:</p>
+
+<div><pre><code class="language-python"># TODO: leer archivo
+# TODO: validar columnas
+# TODO: construir interacciones
+# TODO: guardar resultados en archivo</code></pre></div>
+
+<h4 id="toc_61">Instrucciones</h4>
+
+<ol>
+<li>Copia en tu editor o chat con IA el fragmento de código que contiene los TODO.</li>
+<li>Pide a la IA que complete <strong>solo una parte del problema</strong>, no todo el programa.</li>
+<li>Revisa cuidadosamente la propuesta.</li>
+<li>Integra manualmente los cambios que consideres correctos.</li>
+<li>Ejecuta el programa.</li>
+</ol>
+
+<h3 id="toc_62">🟡 Intermedio</h3>
+
+<p>Además de lo anterior:</p>
+
+<ol>
+<li><p>Verifica que el programa sigue cumpliendo los requisitos:</p>
+
+<ul>
+<li>lectura de archivo TSV</li>
+<li>validación de datos</li>
+<li>construcción de <code>interactions</code></li>
+<li>generación de salida</li>
+</ul></li>
+<li><p>Escribe una breve nota:</p>
+
+<ul>
+<li>¿qué propuso la IA?</li>
+<li>¿qué corregiste tú?</li>
+<li>¿qué entendiste mejor?</li>
+</ul></li>
+</ol>
+
+<h3 id="toc_63">🔴 Avanzado</h3>
+
+<ul>
+<li>Divide el problema en partes más pequeñas antes de usar IA</li>
+<li>Ajusta el prompt para obtener mejores resultados</li>
+<li>Detecta errores o malas prácticas en la solución propuesta</li>
+<li>Mejora el código generado (claridad, modularidad, validaciones)</li>
+</ul>
+
+<h2 id="toc_64">💬 Prompt sugerido</h2>
+
+<div><pre><code class="language-prompt">Tengo un programa en Python que construye un regulon a partir de interacciones regulatorias.
+
+Quiero completar esta parte del código siguiendo buenas prácticas:
+
+# TODO: leer archivo
+# TODO: validar columnas
+# TODO: construir interacciones
+# TODO: guardar resultados en archivo
+
+Requisitos:
+- leer un archivo TSV llamado data/raw/NetworkRegulatorGene.tsv
+- ignorar líneas vacías
+- ignorar comentarios que empiezan con #
+- ignorar el encabezado
+- usar las columnas:
+  - regulatorName
+  - regulatedName
+  - function
+- aceptar solo effect = + o -
+- construir la lista interactions como tuplas (TF, gene, effect)
+- guardar la salida en un archivo TSV
+
+No reescribas todo el programa.
+Completa solo la parte relacionada con los TODOs y explica brevemente cada bloque.</code></pre></div>
+
+<h2 id="toc_65">🧠 ¿Qué significa <code>TODO</code>?</h2>
+
+<p>Un <code>TODO</code> es una convención usada en programación para indicar:</p>
+
+<blockquote>
+<p>“aquí falta implementar algo”</p>
+</blockquote>
+
+<h3 id="toc_66">¿Para qué se usa?</h3>
+
+<ul>
+<li>organizar el trabajo en pasos</li>
+<li>no olvidar partes importantes</li>
+<li>dividir problemas grandes</li>
+<li>planear antes de programar</li>
+</ul>
+
+<p>👉 Es común en desarrollo real.</p>
+
+<h3 id="toc_67">¿Qué implica?</h3>
+
+<p>Cada <code>TODO</code> representa:</p>
+
+<ul>
+<li>una funcionalidad pendiente</li>
+<li>una decisión por tomar</li>
+<li>una parte incompleta del programa</li>
+</ul>
+
+<p>👉 Es un <strong>puente entre el diseño y el código</strong></p>
+
+<h3 id="toc_68">¿Cómo se resuelve?</h3>
+
+<p>Cada <code>TODO</code> se convierte en código real:</p>
+
+<div><pre><code class="language-python"># TODO: leer archivo</code></pre></div>
+
+<p>→</p>
+
+<div><pre><code class="language-python">with open(filename) as f:
+    for line in f:
+        ...</code></pre></div>
+
+<h3 id="toc_69">🤖 Uso con IA</h3>
+
+<p>Puedes pedir:</p>
+
+<div><pre><code class="language-prompt">Completa los TODOs en este código siguiendo buenas prácticas</code></pre></div>
+
+<p>Pero debes:</p>
+
+<ul>
+<li>revisar que sea correcto</li>
+<li>validar que cumpla requisitos</li>
+<li>ajustar si es necesario</li>
+</ul>
+
+<h3 id="toc_70">💡 Idea clave</h3>
+
+<blockquote>
+<p>La IA no implementa por ti: te ayuda a avanzar más rápido, pero tú decides.</p>
+</blockquote>
+
+<h3 id="toc_71">✅ Buena práctica</h3>
+
+<ul>
+<li>escribir TODOs claros y específicos</li>
+<li>eliminarlos una vez implementados</li>
+<li>usarlos como guía de desarrollo</li>
+</ul>
+
+<p>👉 ayudan a mantener el código organizado y entendible</p>
+
+
+
+
+</body>
+
+</html>

@@ -1,64 +1,89 @@
-# Lista de interacciones en la red regulatoria. Cada tupla incluye el nombre del TF, su target gene, y el efecto sobre dicho gen.
-interactions = [
-("AraC", "araA", "+"),
-("AraC", "araB", "-"),
-("LexA", "recA", "-"),
-("CRP", "lacZ", "+"),
-("CRP", "lacY", "+")
-]
+# Importación de las bibliotecas necesarias.
+from collections import defaultdict
+import os
 
-regulon = {}  
+# Recepción y limpieza de los datos del archivo TSV.
+interactions = []
 
-# Primera parte del análisis. 
-# Se recorren las tuplas y se construye un diccionario. Cada llave será un TF; sus valores, los genes que regula. 
-# De nuevo, se recorren las tuplas y se construye un diccionario. 
-# Cada llave será un TF, pero sus valores serán tuplas con esta estructura: (gen, efecto del TF).
+# Lectura de datos desde el archivo TSV
+filename = '../data/raw/NetworkRegulatorGene.tsv'
+
+with open(filename) as f:
+
+    for line in f:
+        # Remoción de saltos de línea.
+        line = line.strip() 
+
+        # Se verifica que las líneas no estén vacías.
+        if not line:
+            continue
+
+        # Verificación de que las líneas no sean comentarios o pertenezan al encabezado del archivo. Se revisó que el encabezado del archivo comienza con '1)regulatorId'.
+        if line.startswith('#') or line.startswith('1)regulatorId'):
+            continue
+
+        # Se dividen las líneas en campos utilizando el tabulador como separador.
+        fields = line.split('\t') 
+
+        # Validación del número mínimo de columnas requeridas para procesar la información. 
+        if len(fields) < 6:
+            continue
+
+        # Selección de las columnas que se utilizarán para construir la red regulatoria.
+        TF = fields[1]
+        gene = fields[4]
+        effect = fields[5]
+
+        # Comprobación de que solo se incluirán los tres tipos válidos de efectos genéticos: activación ('+'), represión ('-') y efecto dual ('-+').
+        if effect not in ('+', '-', '-+'):
+            continue
+
+        # Creación de tuplas que sintetizan las interacciones en la red regulatoria.
+        interactions.append((TF, gene, effect))
+
+# Creación del archivo de salida y se escribe su primera línea.
+os.makedirs('results', exist_ok=True)
+with open('results/regulon_summary.tsv', 'w') as outfile:
+  outfile.write('TF\tTotal genes\tActivados\tReprimidos\tTipo de regulación\tLista de genes\n')
+
+# Se preservó la idea central del código original: procesar la lista de tuplas para crear un diccionario de la red regulatoria. Cada key (TF) tendrá esta tupla: (gen, efecto del TF).
+# A partir del diccionario, se obtienen los seis datos que se colocarán en cada línea del archivo de salida: el nombre del TF, el total de genes regulados, el número de genes activados, la cantidad de genes reprimidos, el tipo de regulación (activador, represor o dual) y los nombres de los citados genes.
+regulon = defaultdict(lambda: {"genes": [],"activados": 0,"reprimidos": 0})
 for TF, gene, effect in interactions:
-    if TF not in regulon:
-        regulon[TF] = []
-    regulon[TF].append(gene)
+    data = regulon[TF]
+    data['genes'].append(gene)
 
-for TF in sorted(regulon):
-    genes = sorted(regulon[TF])
-    total = len(genes)
-    lista_genes = ", ".join(genes)    
-    print(TF, total, lista_genes)
+    if effect == '+':
+            data['activados'] += 1
 
-# Se decidió añadir una línea en blanco para separar ambas tablas.
-print("\n")
+    elif effect == '-':
+            data['reprimidos'] += 1    
 
-# De nuevo, se recorren las tuplas y se construye un diccionario. Para no emplear demasiadas variables, se reusó el nombre del diccionario.
-# Cada llave será un TF, pero sus valores serán tuplas con esta estructura: (gen, efecto del TF).
-regulon = {}  
-
-for TF, gene, effect in interactions:
-    if TF not in regulon:
-        regulon[TF] = []
-    regulon[TF].append((gene, effect))
-
-# Se ordenan los TFs y por cada uno de ellos se inicializan tres variables: el total de genes regulados, los genes activados y los genes reprimidos.
-# Asimismo, se examina la información de las tuplas (gen, efecto) preservadas en los valores de cada llave (TF). 
-
-for TF in sorted(regulon):
-    total_genes = 0
-    genes_activados = 0
-    genes_reprimidos = 0
-    for gene, effect in regulon[TF]:
-        total_genes += 1
-
-        if effect == '+':
-            genes_activados += 1
-        else:
-            genes_reprimidos += 1    
-
-    if genes_reprimidos and genes_activados:
-        efecto = 'Dual'
-
-    elif genes_activados and not genes_reprimidos:
-        efecto = 'Activador'    
-
+     # Se agregó esta línea para contabilizar los genes cuyo efecto es '-+', ya que el código inicial asumía que solo existían los efectos '+' y '-'.
     else:
-        efecto = 'Represor'    
+            data['activados'] += 1
+            data['reprimidos'] += 1 
 
-    # Se imprime el nombre del TF, sus correspondientes totales (genes regulados, genes activados y genes reprimidos) y su tipo de efecto sobre los target genes.
-    print(TF, total_genes, genes_activados, genes_reprimidos, efecto)   
+# La información recopilada se plasma en el archivo de salida. Un tabulador separa cada dato.
+output_file = 'results/regulon_summary.tsv'
+
+with open(output_file, 'w') as outfile:
+    outfile.write('TF\tTotal genes\tActivados\tReprimidos\tTipo de regulación\tLista de genes\n')
+
+    for TF in sorted(regulon):
+        data = regulon[TF]
+
+        genes = ", ".join(sorted(data["genes"]))
+        total = len(genes)
+        activados = data["activados"]
+        reprimidos = data["reprimidos"]
+
+        if activados and reprimidos:
+            efecto = 'Dual'
+
+        elif activados and not reprimidos:
+            efecto = 'Activador'
+        else:
+            efecto = 'Represor'
+
+        outfile.write(f'{TF}\t{total}\t{activados}\t{reprimidos}\t{efecto}\t{genes}\n')
