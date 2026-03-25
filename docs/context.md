@@ -46,3 +46,17 @@ Entonces, esta es la salida esperada:
 |  LexA  | 1 | 0 | 1 | Represor |
 
 
+## Actualización v1.1
+
+1. Leer los datos desde un archivo.
+ 1.1 Cada línea del archivo contiene 6 o 7 columnas, y las que vamos a usar son regulatorName, regulatedName y function. 
+ 1.2 A partir de la información en esas hileras, se pretende generar este resumen:
+
+| TF  | Total de genes  | Genes activados  | Genes reprimidos  | Tipo de efecto  | Lista de genes regulados |
+|---|---|---|---|---|---|
+|  AraC | 2 | 1 | 1 | Dual | araA, araB | 
+|  CRP | 2 | 2 | 0 | Activador | lacY, lacZ |
+|  LexA  | 1 | 0 | 1 | Represor | recA |
+
+2. Los resultados deberán mandarse a un archivo de salida, cuyo formato será TSV. 
+
