@@ -20,7 +20,7 @@ TSV (tab-separated values)
 
 ## Observaciones
 - El archivo contiene comentarios y en total está conformado por 7375 líneas.
-- Ciertas líneas tienen más columnas que el resto de los renglones. 
+- No parece haber líneas vacías, pero ciertas líneas tienen más columnas que el resto de los renglones. 
 - Cada columna está asociada a un encabezado.
-- Solo se usarán tres columnas en este proyecto.
+- Solo se usarán tres columnas en este proyecto: la segunda, la quinta y la sexta. 
 - La columna que detalla los tipos de regulación puede tener alguno de estos valores: +, - o -+.
