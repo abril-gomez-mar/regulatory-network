@@ -1,4 +1,4 @@
-# Importación de las bibliotecas necesarias.
+# Importación de los módulos necesarios.
 from collections import defaultdict
 import os
 import sys

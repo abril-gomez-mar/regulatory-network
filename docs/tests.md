@@ -194,6 +194,20 @@ Represor
 
 **Resultados**
 
+- Se descartaron los renglones cuyo total de columnas fuera inferior a la cantidad aceptable: 6. 
+- El programa no arrojó ningún error y continuó procesando las restantes líneas válidas.
+
+Para cortar las columnas, contarlas y verificar que fueran suficientes para este análisis, se empleó este código:
+
+```python
+ fields = line.split('\t') 
+
+ if len(fields) < 6:
+    continue
+```
+
+
+
 <br>
 
 ### 7. Archivo no existe
@@ -205,7 +219,9 @@ Represor
  - Manejo de error al abrir archivo.
 
 **Comportamiento esperado**
- - El programa muestra un mensaje claro - termina de forma controlada - no sigue ejecutándose como si el archivo existiera
+ - El programa muestra un mensaje claro. 
+ - Termina de forma controlada. 
+ - No sigue ejecutándose como si el archivo existiera.
 
   *Ejemplo esperado*
 
@@ -213,6 +229,31 @@ Represor
 Error: archivo no encontrado data/raw/NetworkRegulatorGene.tsv
 ```
 **Resultados**
+- Se establece la ruta del archivo de entrada y, si él no existe allí, se muestra un mensaje al usuario. Además, gracias a sys.exit(1), el programa finaliza de manera controlada.
+
+Lo anterior se logró mediante este fragmento de código:
+
+```python
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)
+
+# Información sobre el archivo de entrada.
+data_dir = os.path.join(project_root, 'data', 'raw')
+filename = os.path.join(data_dir, 'NetworkRegulatorGene.tsv')
+
+try:
+    with open(filename) as f:
+
+# Si open(filename) no desencadenó ningún error, se comienza a construir interactions.
+
+except FileNotFoundError:
+    print(f'Error: archivo {filename} no encontrado')
+    sys.exit(1)
+
+```
 
 <br>
 
@@ -231,6 +272,35 @@ Error: archivo no encontrado data/raw/NetworkRegulatorGene.tsv
 
 
 **Resultados**
+- Se define la ruta del archivo de entrada y, en caso de que él esté allí pero no pueda ser leído, el usuario será alertado sobre esta situación; por añadidura, el problema terminará de forma controlada.
+
+Ese resultado se alcanzó gracias a este fragmento de código:
+
+```python
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)
+
+# Información sobre el archivo de entrada.
+data_dir = os.path.join(project_root, 'data', 'raw')
+filename = os.path.join(data_dir, 'NetworkRegulatorGene.tsv')
+
+try:
+    with open(filename) as f:
+
+# Si open(filename) no generó ningún error, se comienza a construir interactions.
+
+except FileNotFoundError:
+    print(f'Error: archivo {filename} no encontrado')
+    sys.exit(1)
+
+except PermissionError:
+    print(f'Error: permiso denegado para leer el archivo {filename}')    
+    sys.exit(1)    
+
+```
 
 <br>
 
@@ -244,25 +314,54 @@ La lista interactions fue construida a partir del archivo.
 
 **Comportamiento esperado**
  - El programa anterior sigue funcionando sin cambios importantes.
- - Se obtienen estos datos: TF, total de genes regulados, número de genes activados, número de genes reprimidos  y tipo general del TF.
+ - Se obtienen estos datos: TF, total de genes regulados, número de genes activados, número de genes reprimidos, tipo general de regulación ejercida por el TF, y la lista de target genes.
 
 **Resultados** 
-# justificar que la lógica subyacente no varió: se siguió usando un diccionario (pero ahora se escogió uno más robusto y que asignaba etiquetas a cada value de cada key) (puntualizar el manejo de las keys preexistentes)
-# regulon = defaultdict(lambda: {"genes": [],"activados": 0,"reprimidos": 0}) (enfatizar que se preservó el uso de contadores para estudiar los roles de cada TF)
-# se continuó usando el efecto de interactions para determinar el tipo de efecto regulatorio de cada TF sobre sus tgs
-# para imprimir el archivo, se revisaron de nuevo las keys ordenadas del diccionario y se ordenaron sus respectivas listas de tgs, cuya cardinalidad también se calculó y a partir de esas estructuras de datos se crearon strings.
+- La lógica subyacente del programa no varió: con base en una lista de tuplas, la cual en este caso se creó a partir del archivo, se elaboró un diccionario cuyas keys eran los TFs y los valores, acomodados en una lista, eran los genes regulados (target genes).  
+- También se preservó el ulterior cálculo de la longitud de dicha lista; ello elucidó el total de genes regulados por cada TF. Después, como se hacía en la versión pasada del programa, ellos se ordenaron de manera alfabética en una cadena.
+- Aunado a lo anterior, se respetó el uso de contadores de genes activados y reprimidos. Estos valores numéricos se aprovecharon para clasificar el tipo de regulación documentada entre cada TF y sus target genes.
 
-además, los valores finales de genes activados y reprimidos fueron considerados para definir el tipo de efecto regulatorio de cada T sobre sus genes correspondientes.
-   
+En ese sentido, la principal diferencia entre la versión previa del código y la presente actualización es la presencia de defaultdict, que proviene del módulo *collections* de Python y es un diccionario más elegante y robusto. Conforme se recorren las tuplas almacenadas en interactions, se revisa si cada TF ya forma parte del diccionario; en el escenario de que esa condición sea falsa, se crea un diccionario con 3 campos: la lista de nombres de los target genes, la cantidad de genes activados y el total de genes reprimidos. Esta información se recaba, organiza y complementa conforme el programa hace parsing sobre el archivo de entrada.
+
+- Como se ilustra más abajo, el programa obtiene los seis datos solicitados:
+
+```python
+
+interactions = []
+
+# Creación de tuplas que sintetizan las interacciones en la red regulatoria.
+      interactions.append((TF, gene, effect))
+
+regulon = defaultdict(lambda: {"genes": [],"activados": 0,"reprimidos": 0})
+for TF, gene, effect in interactions:
+    data = regulon[TF]
+    data['genes'].append(gene)
+
+    if effect == '+':
+        data['activados'] += 1
+
+    elif effect == '-':
+        data['reprimidos'] += 1    
+
+    # Se agregó esta línea para contabilizar los genes cuyo efecto es '-+', ya que el código inicial asumía que solo existían los efectos '+' y '-'.
+    else:
+        data['activados'] += 1
+        data['reprimidos'] += 1 
+
+# La información recopilada se plasma en el archivo de salida. Un tabulador separa cada dato. Se escribe la primera línea del documento.
+with open(output_file, 'w') as outfile:
+    outfile.write('TF\tTotal genes\tActivados\tReprimidos\tTipo de efecto regulatorio\tLista de genes\n')
+
     for TF in sorted(regulon):
-        data = regulon[TF]
+        data = regulon[TF] # Primer dato: nombre del TF.
 
-        genes = sorted(data["genes"])
-        total = len(genes)
-        lista_genes = ', '.join(genes)
-        activados = data["activados"]
-        reprimidos = data["reprimidos"]
+        genes = sorted(data["genes"]) 
+        total = len(genes) # Segundo dato: total de target genes del TF.
+        lista_genes = ', '.join(genes) # Tercer dato: nombres de dichos genes.
+        activados = data["activados"] # Cuarto dato: cantidad de genes activados.
+        reprimidos = data["reprimidos"] # Quinto dato: número de genes reprimidos.
 
+        # Sexto dato: tipo de regulación del TF sobre sus target genes.
         if activados and reprimidos:
             efecto = 'Dual'
 
@@ -271,55 +370,8 @@ además, los valores finales de genes activados y reprimidos fueron considerados
         else:
             efecto = 'Represor'
 
-for TF, gene, effect in interactions:
-    if TF not in regulon:
-        regulon[TF] = []
-    regulon[TF].append(gene)
+        outfile.write(f'{TF}\t{total}\t{activados}\t{reprimidos}\t{efecto}\t{lista_genes}\n')
 
-for TF in sorted(regulon):
-    genes = sorted(regulon[TF])
-    total = len(genes)
-    lista_genes = ", ".join(genes)    
-    print(TF, total, lista_genes)
-
-
-
-
-for TF, gene, effect in interactions:
-    if TF not in regulon:
-        regulon[TF] = []
-    regulon[TF].append(gene)
-    regulon[TF].append((gene, effect))
-
-for TF in sorted(regulon):
-    genes = sorted(regulon[TF])
-    total = len(genes)
-    lista_genes = ", ".join(genes)    
-    print(TF, total, lista_genes)
-    total_genes = 0
-  genes_activados = 0
-    genes_reprimidos = 0
-    for gene, effect in regulon[TF]:
-        total_genes += 1
-
-       
-        if effect == '+':
-            genes_activados += 1
-        else:
-            genes_reprimidos += 1    
-
-    if genes_reprimidos and genes_activados:
-        efecto = 'Dual'
-
-    elif genes_activados and not genes_reprimidos:
-        efecto = 'Activador'    
-
-    else:
-        efecto = 'Represor'    
-
-    # Se imprime el nombre del TF, sus correspondientes totales (genes regulados, genes activados y genes reprimidos) y su tipo de efecto sobre los target genes.
-    print(TF, total_genes, genes_activados, genes_reprimidos, efecto) 
-
-    
+```
 
 <br>
