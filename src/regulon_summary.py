@@ -228,6 +228,35 @@ def write_output(regulon, output_file):
             # En cada línea del archivo de salida se colocan los seis datos correspondientes a cada TF, separados por un tabulador.
             outfile.write(f'{TF}\t{total}\t{activados}\t{reprimidos}\t{efecto}\t{lista_genes}\n')
 
-    # Se indica que el return está vacío: no se regresa ningún valor específico, ya que la función solo se encarga de redactar el archivo de salida. 
-    return 0
-        
+
+    # Dado que no se regresará ningún valor, al menos puede imprimirse un mensaje para indicarle al usuario que el archivo ya está disponible en la carpeta 'results'. 
+    print(f'El archivo regulon_summary.tsv puede consultarse en la carpeta "results".')
+
+    # A raíz de que 'return 0' no estará asociado a ningún valor, estará vacío y por ello puede omitirse. 
+
+
+# =================================================================================================================================================================================================================================
+#  Función principal que posibilitará la ejecución del programa.
+# ================================================================================================================================================================================================================================= 
+
+def main():
+    """ Función que ejecuta en el orden correcto las funciones mostradas más arriba. No recibe ningún argumento y tampoco regresa ningún valor. """
+
+    # Se definen las rutas de los archivos de entrada y salida.
+    filename, output_file = defining_routes()
+
+    # Se carga el archivo de interacciones regulatorias y se obtiene una lista de tuplas con la información relevante.
+    interactions = load_interactions(filename)
+
+    # Se construye un diccionario a partir de la lista de tuplas.
+    regulon = build_regulon(interactions)
+
+    # Se genera el archivo de salida con la información del diccionario.
+    write_output(regulon, output_file)
+
+#==================================================================================================================================================================================================================================
+# Se llama a la función principal para ejecutar el programa.
+# =================================================================================================================================================================================================================================
+
+if __name__ == "__main__":
+    main()

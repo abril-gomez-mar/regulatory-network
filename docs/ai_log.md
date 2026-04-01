@@ -130,3 +130,11 @@ except PermissionError:
     print(f'Error: permiso denegado para leer el archivo {filename}')    
     sys.exit(1)
 ```
+
+## Interacción 5
+
+**Pregunta:** Dado que en la última función no necesito regresar ningún valor, ¿también debo poner un 'return' al final de ese fragmento de código?
+
+**Aprendí:** Si bien escribirse 'return 0' al final del programa, cualquier función que carezca de dicha línea ejecutará 'return' de manera automática. Por otro lado, en vista de que en este código se piensa devolver de forma explícita un valor nulo después de generar el archivo de salida, podría ser más práctico regresar 0 de manera implícita.
+
+
