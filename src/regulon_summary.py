@@ -14,8 +14,10 @@ import sys
 # =================================================================================================================================================================================================================================
 
 # TODO: Extraer una función que genere las rutas de los archivos de entrada y salida, de forma que pueda ser aprovechada por la función 'load interactions'.
+# TODO: Validar, mediante el uso del módulo os, que el archivo de entrada exista. De ser posible, también verificar que dicho documento pueda ser leído.
 
 def defining_routes():
+
    """ Establece las rutas de los archivos de entrada y salida. Si no existe la carpeta 'results', la genera. 
    
    Args:
@@ -43,6 +45,21 @@ def defining_routes():
 
    output_file = os.path.join(results_dir, 'regulon_summary.tsv')
 
+   # Manejo de errores relacionados con el input. 
+
+   # Para mejorar la coherencia del código, se decidió colocar aquí la sección encargada de cerciorarse de que el archivo de entrada exista y pueda ser leído.
+   # De este modo, la función load_interactions, mostrada más abajo, solo debe procesar los datos y construir la lista de interacciones.
+   
+   # Se valida que exista el archivo de entrada. Las líneas subordinadas al if, que imprimirán un mensaje de error y terminarán el programa, se ejecutarán solo si l documento no está presente.
+   if not os.path.isfile(filename):
+      print(f'Error: el archivo de entrada no existe.')
+      sys.exit(1)
+
+   # Se corrorobora que el usuario pueda leer el archivo. De lo contrario, se arroja un mensaje de error y se detiene la ejecución del programa.
+   if not os.access(filename, os.R_OK):
+      print(f'Error: no se puede acceder al archivo de entrada, ya que usted no tiene permisos de lectura.')
+      sys.exit(1)
+
    return filename, output_file
 
 
@@ -51,7 +68,7 @@ def defining_routes():
 # =================================================================================================================================================================================================================================
 
 # =================================================================================================================================================================================================================================
-# Responsabilidad: Leer el archivo de interacciones regulatorias y construir una estructura de datos. También se valida que el archivo exista y el usuario tenga permiso de leerlo.
+# Responsabilidad: Leer el archivo de interacciones regulatorias y construir una estructura de datos. De antemano, se validó que el archivo existiera y pudiera ser leído por el usuario.
 # Entrada: Archivo TSV con interacciones regulatorias entre reguladores y genes.
 # Salida: Lista de tuplas que señalan los TFs, genes regulados y el tipo de efecto regulatorio.
 # =================================================================================================================================================================================================================================
@@ -73,53 +90,46 @@ def load_interactions(filename):
     # Recepción y limpieza de los datos del archivo TSV.
     interactions = []
 
-    try:
-        with open(filename) as f:
+    with open(filename) as f:
 
-            for line in f:
+        for line in f:
             # Remoción de saltos de línea.
-                line = line.strip() 
+            line = line.strip() 
 
             # Se verifica que las líneas no estén vacías.
-                if not line:
-                    continue
+            if not line:
+                continue
 
             # Verificación de que las líneas no sean comentarios.
-                if line.startswith('#'):
-                    continue 
+            if line.startswith('#'):
+                continue 
             
             # Inspección de que las líneas no pertenezan al encabezado, que comienza con '1)regulatorId'.
-                if line.startswith('1)regulatorId'):
-                    continue
+            if line.startswith('1)regulatorId'):
+                continue
 
             # Se dividen las líneas en campos utilizando el tabulador como separador.
-                fields = line.split('\t') 
+            fields = line.split('\t') 
 
             # Validación del número mínimo de columnas requeridas para procesar la información. 
-                if len(fields) < 6:
+            if len(fields) < 6:
                     continue
 
             # Selección de las columnas que se utilizarán para construir la red regulatoria.
-                TF = fields[1]
-                gene = fields[4]
-                effect = fields[5]
+            TF = fields[1]
+            gene = fields[4]
+            effect = fields[5]
 
             # Comprobación de que solo se incluirán los tres tipos válidos de efectos genéticos: activación ('+'), represión ('-') y efecto dual ('-+').
-                if effect not in ('+', '-', '-+'):
-                    print(f'Advertencia. Efecto desconocido {effect} en la interacción entre {TF} y {gene}. Se omitirá esta interacción.')
-                    continue
+            if effect not in ('+', '-', '-+'):
+                print(f'Advertencia. Efecto desconocido {effect} en la interacción entre {TF} y {gene}. Se omitirá esta interacción.')
+                continue
 
             # Creación de tuplas que sintetizan las interacciones en la red regulatoria.
-                interactions.append((TF, gene, effect))      
+            interactions.append((TF, gene, effect))      
 
-# Manejo de posibles errores al intentar abrir el archivo. Si alguno de estas fallas se presenta, el usuario recibirá un mensaje y el programa finalizará de manera controlada.
-    except FileNotFoundError:
-      print(f'Error: archivo {filename} no encontrado')
-      sys.exit(1)
-    except PermissionError:
-      print(f'Error: permiso denegado para leer el archivo {filename}')    
-      sys.exit(1)
- 
+    # En vista de que la función defining_routes valida la lectura y la existencia del archivo de entrada y por ende cualquier error detectado se manejará en esa parte, en la presente función ya no es necesario colocar las palabras 'try' y 'except' para contemplar dichos errores al intentar construir interactions.
+
     # Se devuelve la lista de tuplas con la información de los TFs, genes regulados y el tipo de efecto regulatorio.
     return interactions
 
