@@ -269,3 +269,21 @@ LexA 1 0 1 Represor
 ```
 
 ¿Coinciden con la salida esperada? Sí.
+
+
+## Command Line Interface (CLI)
+# reminder: merge tests file with this one (one commit; explain logic to renconciliate names)
+
+Caso: Correr el programa con paso de argumentos.
+
+Entrada:
+
+```bash
+
+uv run python regulon_summary.py input.txt output.txt
+uv run python regulon_summary.py NetworkRregulatorGene.tsv tf_summary.yxy
+
+```
+
+Resultado
+El programa lee el archivo de entrada y genera el resultado con el nombre que se le pasó como argumento. 

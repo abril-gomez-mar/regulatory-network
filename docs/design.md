@@ -48,3 +48,11 @@
 - Extraer información. Se usarán las columnas 2, 5 y 6, puesto que ellas proporcionan los nombres de los reguladores (TF), así como sus respectivos genes regulados (TG). También mencionan el tipo de efecto que cada TF ejerce sobre un TG.
 - Construir las interacciones de la red. Se considerarán estos parámetros: nombre del TF, número de genes regulados, total de genes activados, cantidad de genes reprimidos, y tipo de efecto regulatorio del TF sobre sus respectivos target genes, cuyos nombres también se mencionan.
 - Generar un archivo de salida.
+
+## Actualización v1.2
+
+El programa recibirá 2 argumentos desde la línea de comandos.
+
+Flujo:
+
+Usuario -->  CLI --> main () --> funciones  

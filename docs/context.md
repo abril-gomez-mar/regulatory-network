@@ -60,3 +60,11 @@ Entonces, esta es la salida esperada:
 
 2. Los resultados deberán mandarse a un archivo de salida, cuyo formato será TSV. 
 
+
+## Actualización v1.2
+
+Problema:
+El programa depende de rutas fijas (harcoded). 
+
+Nuevo requisito:
+El programa debe recibir 2 argumentos: el archivo de entrada y el archivo de salida. 
