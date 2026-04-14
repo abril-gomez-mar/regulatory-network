@@ -20,7 +20,7 @@ import argparse
 
 def parse_arguments():
 
-   """ Recibe rutas relativas de los archivos de entrada y salida (relativas a la raíz del proyecto).
+   """ Recibe rutas de los archivos de entrada y salida (ellas son relativas a la raíz del proyecto).
        Asimismo, resuelve esas rutas y, si es necesario, crea el directorio del archivo de salida. 
    
    Args:
@@ -28,7 +28,8 @@ def parse_arguments():
 
    Returns:
         filename (str): Ruta absoluta del archivo TSV de entrada.
-        output_file (str): Ruta absoluta donde se albergará el archivo de salida. 
+        output_file (str): Ruta absoluta donde se albergará el archivo de salida.
+        min_genes (int): Número mínimo de genes que un TF debe tener para ser parte del archivo de salida. 
    
    """
 
@@ -37,6 +38,10 @@ def parse_arguments():
    # Definir los argumentos posicionales.
    parser.add_argument('input', help='Ruta relativa del archivo TSV de entrada.')
    parser.add_argument('output', help='Ruta relativa del archivo TSV de salida.')
+   
+   # Definir un nuevo argumento, que será opcional, para filtrar los TFs que se tomarán en cuenta al redactar el archivo de salida.
+   parser.add_argument('--min_genes', type=int, default=1, help='Número mínimo de genes asociados a cada uno de los TFs que se desea incluir en el archivo de salida.')
+   
    args = parser.parse_args()
 
    # Se establece la ruta absoluta de la raíz del proyecto, para lo cual se obtiene la ruta del directorio actual y luego se accede a su carpeta parental.
@@ -66,8 +71,8 @@ def parse_arguments():
       print(f'Error: no se puede acceder al archivo de entrada, ya que usted no tiene permisos de lectura.')
       sys.exit(1)
 
-   return filename, output_file
-
+   # Se regresan las rutas de los archivos de entrada y salida. También se retorna un dato que se usará más abajo: el número mínimo de genes de los TFs que figurarán en el archivo de salida. 
+   return filename, output_file, args.min_genes
 
 # =================================================================================================================================================================================================================================
 # Creación de una estructura que contenga los datos que se planea plasmar en el archivo de salida.
@@ -199,14 +204,15 @@ def build_regulon(interactions):
 
 # TODO: Extraer una función que, iterando sobre las keys del diccionario, genere el contenido del archivo de salida, donde cada renglón debe contener seis datos: el nombre del TF, el total de genes regulados, el número de genes activados, la cantidad de genes reprimidos, el tipo de regulación (activador, represor o dual) y los nombres de los antedichos genes.
  
-def write_output(regulon, output_file):
+def write_output(regulon, output_file, min_genes):
 
     """ Elabora un manuscrito con la información del diccionario recién creado. 
    
    Args:
         regulon (str): Diccionario que contiene la información resumida de la red regulatoria. Cada clave es un TF y se vincula con tres etiquetas: 'genes' (lista de genes regulados), 'activados' (número de genes activados) y 'reprimidos' (cantidad de genes reprimidos).
         output_file (str): Ruta del archivo de salida, la cual se definió en la función 'defining_routes'. Este documento se localizará en la carpeta 'results' y se llamará 'regulon_summary.tsv'.
-        
+        min_genes (int): Número mínimo de genes asociados a un TF para que este se incluya en el archivo de salida.
+
    Returns:
         Ninguno. La función solo transcribe la información en el archivo de salida, así que no debe regresar ningún valor particular.
    
@@ -220,9 +226,16 @@ def write_output(regulon, output_file):
         for TF in sorted(regulon):
             data = regulon[TF]
 
-            # Se acomoda de manera alfabética la lista de target genes de cada TF. Luego, se obtiene la cardinalidad de dicha lista y sus strings se concatenan con una coma y un espacio como separador.
+            # Se acomoda de manera alfabética la lista de target genes de cada TF. Luego, se obtiene la cardinalidad de dicha lista.
             genes = sorted(data["genes"])
             total = len(genes)
+
+            # Se crea un filtro con base en min_genes, que equivale al valor de args.min_genes definido en la función parse_arguments. 
+            # Solo si el valor de la variable 'total' es mayor o igual al mínimo de genes, el código subordinado al if no se ejecutará y por ende el TF se tomará en cuenta para escribir el archivo de salida. 
+            if total < min_genes:
+                continue   
+
+            # Los target genes se concatenan en un string y solo son separados por comas, seguidas de un espacio.
             lista_genes = ', '.join(genes)
 
             # Considerando los resultados de los contadores de genes activados y reprimidos, se pondera cuál es el efecto regulatorio de cada TF: activador, represor o dual. 
@@ -259,7 +272,7 @@ def main():
     """ Función que ejecuta en el orden correcto las funciones mostradas más arriba. No recibe ningún argumento y tampoco regresa ningún valor. """
 
     # Se definen las rutas de los archivos de entrada y salida.
-    filename, output_file = parse_arguments()
+    filename, output_file, min_genes = parse_arguments()
 
     # Se carga el archivo de interacciones regulatorias y se obtiene una lista de tuplas con la información relevante.
     interactions = load_interactions(filename)
@@ -268,7 +281,7 @@ def main():
     regulon = build_regulon(interactions)
 
     # Se genera el archivo de salida con la información del diccionario.
-    write_output(regulon, output_file)
+    write_output(regulon, output_file, min_genes)
 
 #==================================================================================================================================================================================================================================
 # Se llama a la función principal para ejecutar el programa.
