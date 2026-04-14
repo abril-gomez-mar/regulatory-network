@@ -281,9 +281,23 @@ Entrada:
 ```bash
 
 uv run python regulon_summary.py input.txt output.txt
-uv run python regulon_summary.py NetworkRregulatorGene.tsv tf_summary.yxy
+uv run python regulon_summary.py NetworkRregulatorGene.tsv tf_summary.tsv
 
 ```
 
 Resultado
 El programa lee el archivo de entrada y genera el resultado con el nombre que se le pasó como argumento. 
+
+<br>
+
+## CLI — Filtro por número de genes
+
+### Caso: uso de --min_genes.
+
+Entrada:
+python script.py input.tsv output.tsv --min_genes 2
+
+Resultado esperado:
+
+- Solo se incluyen TFs con al menos 2 genes.
+- El archivo de salida refleja el filtrado correctamente.

@@ -49,6 +49,8 @@
 - Construir las interacciones de la red. Se considerarán estos parámetros: nombre del TF, número de genes regulados, total de genes activados, cantidad de genes reprimidos, y tipo de efecto regulatorio del TF sobre sus respectivos target genes, cuyos nombres también se mencionan.
 - Generar un archivo de salida.
 
+<br>
+
 ## Actualización v1.2
 
 El programa recibirá 2 argumentos desde la línea de comandos.
@@ -56,3 +58,15 @@ El programa recibirá 2 argumentos desde la línea de comandos.
 Flujo:
 
 Usuario -->  CLI --> main () --> funciones  
+
+<br>
+
+## Actualización v1.3
+
+Se introduce un nuevo parámetro `--min_genes`.
+
+Diseño:
+
+- Después de construir el diccionario `regulon`, se debe aplicar un filtro.
+- El filtro selecciona únicamente los TFs cuyo número de genes sea mayor o igual al valor indicado.
+- El filtrado ocurre antes de generar la salida.

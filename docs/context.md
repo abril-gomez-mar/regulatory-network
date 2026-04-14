@@ -60,6 +60,7 @@ Entonces, esta es la salida esperada:
 
 2. Los resultados deberán mandarse a un archivo de salida, cuyo formato será TSV. 
 
+<br>
 
 ## Actualización v1.2
 
@@ -68,3 +69,13 @@ El programa depende de rutas fijas (harcoded).
 
 Nuevo requisito:
 El programa debe recibir 2 argumentos: el archivo de entrada y el archivo de salida. 
+
+<br>
+
+## Actualización v1.3
+
+Problema:
+El programa no permite filtrar los reguladores por un número mínimo de genes.
+
+Nuevo requisito:
+El programa debe permitir filtrar los TFs mostrando solo aquellos que tengan al menos un número mínimo de genes, definido por el argumento `--min_genes`.
