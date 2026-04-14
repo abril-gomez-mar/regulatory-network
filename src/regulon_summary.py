@@ -2,6 +2,7 @@
 from collections import defaultdict
 import os
 import sys
+import argparse
 
 # =================================================================================================================================================================================================================================
 #  Creación de las rutas de entrada y salida.
@@ -15,35 +16,40 @@ import sys
 
 # TODO: Extraer una función que genere las rutas de los archivos de entrada y salida, de forma que pueda ser aprovechada por la función 'load interactions'.
 # TODO: Validar, mediante el uso del módulo os, que el archivo de entrada exista. De ser posible, también verificar que dicho documento pueda ser leído.
+# TODO: Extraer, mediante el módulo argparse, una función que cumpla los mismos roles mostrados enseguida: definir las rutas de los archivos de entrada y salida.
 
-def defining_routes():
+def parse_arguments():
 
-   """ Establece las rutas de los archivos de entrada y salida. Si no existe la carpeta 'results', la genera. 
+   """ Recibe rutas relativas de los archivos de entrada y salida (relativas a la raíz del proyecto).
+       Asimismo, resuelve esas rutas y, si es necesario, crea el directorio del archivo de salida. 
    
    Args:
-        Ninguno. Las citadas rutas se definen dentro de la función.
+        Dos rutas relativas. No se brindan desde main, sino que se proporcionan a través de la línea de comandos.
 
    Returns:
-        filename (str): Ruta del archivo TSV de entrada.
-        output_file (str): Ruta donde se albergará el archivo de salida. 
+        filename (str): Ruta absoluta del archivo TSV de entrada.
+        output_file (str): Ruta absoluta donde se albergará el archivo de salida. 
    
    """
 
+   parser = argparse.ArgumentParser(description="Rutas relativas (respecto a la raíz del proyecto) de los archivos de entrada y salida.")
 
-   # Se establecen las rutas con las cuales se trabajará. Si no existe la carpeta 'results', se crea para almacenar el archivo de salida.
+   # Definir los argumentos posicionales.
+   parser.add_argument('input', help='Ruta relativa del archivo TSV de entrada.')
+   parser.add_argument('output', help='Ruta relativa del archivo TSV de salida.')
+   args = parser.parse_args()
 
+   # Se establece la ruta absoluta de la raíz del proyecto, para lo cual se obtiene la ruta del directorio actual y luego se accede a su carpeta parental.
    current_dir = os.path.dirname(os.path.abspath(__file__))
    project_root = os.path.dirname(current_dir)
 
-   # Información sobre el archivo de entrada.
-   data_dir = os.path.join(project_root, 'data', 'raw')
-   filename = os.path.join(data_dir, 'NetworkRegulatorGene.tsv')
+   # Las rutas relativas introducidas se vinculan con la raíz del proyecto. Luego, se establecen las rutas absolutas de los archivos de entrada y salida. Esta información se aprovechará más adelante.
+   filename = os.path.abspath(os.path.join(project_root, args.input))
+   output_file = os.path.abspath(os.path.join(project_root, args.output))
 
-   # Datos sobre el archivo de salida.
-   results_dir = os.path.join(project_root, 'results')
-   os.makedirs(results_dir, exist_ok=True)
+   # Se crea el directorio del archivo de salida si no existe. Esta es la versión actualizada de la línea que creaba la carpeta 'results' si aún no existía.
+   os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
-   output_file = os.path.join(results_dir, 'regulon_summary.tsv')
 
    # Manejo de errores relacionados con el input. 
 
@@ -52,7 +58,7 @@ def defining_routes():
    
    # Se valida que exista el archivo de entrada. Las líneas subordinadas al if, que imprimirán un mensaje de error y terminarán el programa, se ejecutarán solo si l documento no está presente.
    if not os.path.isfile(filename):
-      print(f'Error: el archivo de entrada no existe.')
+      print(f'Error: el archivo de entrada no existe. Por favor, revise la ruta proporcionada e intente de nuevo.')
       sys.exit(1)
 
    # Se corrorobora que el usuario pueda leer el archivo. De lo contrario, se arroja un mensaje de error y se detiene la ejecución del programa.
@@ -253,7 +259,7 @@ def main():
     """ Función que ejecuta en el orden correcto las funciones mostradas más arriba. No recibe ningún argumento y tampoco regresa ningún valor. """
 
     # Se definen las rutas de los archivos de entrada y salida.
-    filename, output_file = defining_routes()
+    filename, output_file = parse_arguments()
 
     # Se carga el archivo de interacciones regulatorias y se obtiene una lista de tuplas con la información relevante.
     interactions = load_interactions(filename)
