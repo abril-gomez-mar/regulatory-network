@@ -295,9 +295,44 @@ El programa lee el archivo de entrada y genera el resultado con el nombre que se
 ### Caso: uso de --min_genes.
 
 Entrada:
+
+```python
+
 python script.py input.tsv output.tsv --min_genes 2
+
+```
 
 Resultado esperado:
 
 - Solo se incluyen TFs con al menos 2 genes.
 - El archivo de salida refleja el filtrado correctamente.
+
+
+**Resultados**
+
+Para correr el programa, se utilizó esta instrucción:
+
+```python
+
+uv run python .\src\regulon_summary.py .\data\raw\NetworkRegulatorGene.tsv results/output.tsv --min_genes 2
+```
+
+Luego, se ejecutó la siguiente línea para remover el encabezado del archivo de salida y aislar la columna 2 de ese documento (la cual muestra el número de genes regulados por cada TF). A continuación, se identificaron los valores únicos, se ordenaron de manera ascendente y se tomaron los cinco primeros resultados.
+
+```bash
+
+ awk -F '\t' 'NR>1{print $2}' results/output.tsv | sort -u | sort -n | head -5
+
+```
+
+Se obtuvieron estos valores:
+
+´´´
+2
+3
+4
+5
+6
+´´´
+
+Se demuestra que, tal como se pretendía, en el archivo no hay ningún TF que regule menos de dos genes, que fue el número especificado por el usuario mediante el argumento opcional *--min_genes*.
