@@ -79,3 +79,11 @@ El programa no permite filtrar los reguladores por un número mínimo de genes.
 
 Nuevo requisito:
 El programa debe permitir filtrar los TFs mostrando solo aquellos que tengan al menos un número mínimo de genes, definido por el argumento `--min_genes`.
+
+<br>
+
+## Actualización v1.4
+
+Problema: Mejorar la robustez del programa actual. 
+
+Nuevos requisitos: Debe incorporarse el manejo de errores en operaciones de entrada y salida; asimismo, es menester extender la validación del programa cuando sea necesario. 

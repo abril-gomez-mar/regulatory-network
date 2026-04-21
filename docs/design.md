@@ -70,3 +70,15 @@ Diseño:
 - Después de construir el diccionario `regulon`, se debe aplicar un filtro.
 - El filtro selecciona únicamente los TFs cuyo número de genes sea mayor o igual al valor indicado.
 - El filtrado ocurre antes de generar la salida.
+
+<br>
+
+## Actualización v1.4
+
+Se añaden validaciones al programa, priorizando los posibles errores en las operaciones de entrada y salida.
+
+Diseño:
+
+- Agregar líneas que detallen los tipos de errores que ocurrieron en la lectura o escritura del archivo, tratándolos como una clase de returns.
+- Invocar dichos returns desde el main() del programa.
+- Añadir mensajes concisos que expliquen cuáles problemas se presentaron al correr el programa. 

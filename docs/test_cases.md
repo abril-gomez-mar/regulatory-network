@@ -296,7 +296,7 @@ El programa lee el archivo de entrada y genera el resultado con el nombre que se
 
 Entrada:
 
-```python
+```bash
 
 python script.py input.tsv output.tsv --min_genes 2
 
@@ -312,7 +312,7 @@ Resultado esperado:
 
 Para correr el programa, se utilizó esta instrucción:
 
-```python
+```bash
 
 uv run python .\src\regulon_summary.py .\data\raw\NetworkRegulatorGene.tsv results/output.tsv --min_genes 2
 ```
@@ -336,3 +336,175 @@ Se obtuvieron estos valores:
 ´´´
 
 Se demuestra que, tal como se pretendía, en el archivo no hay ningún TF que regule menos de dos genes, que fue el número especificado por el usuario mediante el argumento opcional *--min_genes*.
+
+<br>
+
+##  Manejo de errores
+
+Enseguida se mostrarán los casos de prueba relacionados con alguna de las fallas que podrían presentarse al correr el programa. 
+
+1. Equivocaciones relacionadas con la lectura del archivo de entrada
+
+### Archivo inexistente (FileNotFoundError)
+
+Entrada:
+
+```bash
+
+uv run python .\src\regulon_summary.py .\data\raw\documento.txt results/output.tsv --min_genes 2
+```
+
+Resultado esperado:
+- Se imprime un mensaje de error.
+- El programa termina de manera ordenada. 
+
+
+**Resultados**
+
+
+<br>
+
+### Falta de permisos (PermissionError)
+
+Entrada:
+
+```bash
+touch data/raw/bloqueado.tsv
+chmod 000 data/raw/bloqueado.tsv
+uv run python .\src\regulon_summary.py .\data\bloqueado.tsv results/output.tsv --min_genes 2
+
+```
+
+Resultado esperado:
+- Se arroja un mensaje para indicar que el usuario no puede leer el archivo.
+- El programa finaliza de forma ordenada. 
+
+
+**Resultados**
+
+
+
+
+<br>
+
+### Ruta inválida (OSError)
+
+Entrada:
+
+```bash
+uv run python .\src\regulon_summary.py .\data\fake\NetworkRegulatorGene.tsv  results/output.tsv --min_genes 2
+
+```
+
+Resultado esperado:
+- Se imprime un mensaje para informar al usuario de que la ruta introducida no existe.
+- El programa acaba de manera ordenada. 
+
+
+**Resultados**
+
+
+<br>
+
+### Errores al abrir o leer el archivo  (IOError, OSError)
+
+Entrada:
+
+```bash
+
+mkdir data/raw/lost.tsv # Se crea un repositorio que, por error, fue nombrado como si fuera un archivo separado por tabuladores.
+
+uv run python .\src\regulon_summary.py .\data\raw\lost.tsv results/output.tsv --min_genes 2 # El argumento posicional del archivo de entrada es erróneo y no se puede abrir o leer el documento. 
+
+```
+
+Resultado esperado:
+- Se manda un mensaje para indicar que el archivo no puede abrirse.
+- El programa finaliza de manera ordenada. 
+
+
+**Resultados**
+
+
+
+<br>
+
+2. Errores asociados a la escritura del documento de salida 
+
+### Rutas inválidas (OSError)
+
+Entrada:
+
+```bash
+touch fake # Se crea un archivo, no un directorio. 
+
+uv run python .\src\regulon_summary.py .\data\raw\NetworkRegulatorGene.tsv fake/output.tsv --min_genes 2
+
+```
+
+Resultado esperado:
+- Se envía un mensaje para indicar que la ruta seleccionada no puede usarse.  
+- El programa termina de manera ordenada. 
+
+
+**Resultados**
+
+
+
+<br>
+
+### Carpetas inexistentes (FileNotFoundError)
+
+
+Entrada:
+
+```bash
+uv run python .\src\regulon_summary.py .\data\raw\NetworkRegulatorGene.tsv salidas/output.tsv --min_genes 2
+
+```
+
+Resultado esperado:
+- Se indica que la carpeta no existe.
+- El programa finaliza de forma ordenada. 
+
+**Resultados**
+
+<br>
+
+### Falta de permisos (PermissionError)
+
+
+Entrada:
+
+```bash
+mkdir salida_bloqueada
+chmod 000 salida_bloqueada
+uv run python .\src\regulon_summary.py .\data\raw\NetworkRegulatorGene.tsv salida_bloqueada/output.tsv --min_genes 2
+
+```
+
+Resultado esperado:
+- Se comunica al usuario que no cuenta con el permiso de escribir el archivo de salida.
+- El programa termina de manera organizada. 
+
+**Resultados**
+
+<br>
+
+### Errores al escribir el archivo (IOError, OSError)
+
+Entrada:
+
+```bash
+uv run python .\src\regulon_summary.py .\data\raw\NetworkRegulatorGene.tsv results --min_genes 2 # No se indica el nombre del archivo de salida. 
+```
+
+Resultado esperado:
+- Se imprime un mensaje que detalla el error encontrado.
+- El programa acaba de forma ordenada.
+
+
+**Resultados**
+
+
+<br>
