@@ -54,19 +54,8 @@ def parse_arguments():
 
    # Se removió la línea que creaba el directorio 'results', si aún no existía. Por ende, el usuario siempre deberá señalar que el output se almacenará en dicha carpeta, y cualquier otra ruta será rechazada más adelante.
 
-   # Manejo de errores relacionados con el input. 
-
-   # Para mejorar la coherencia del código, se decidió colocar aquí la sección encargada de cerciorarse de que el archivo de entrada exista y pueda ser leído.
-   # De este modo, la función load_interactions, mostrada más abajo, solo debe procesar los datos y construir la lista de interacciones.
+   # Para mejorar el manejo de errores, se regresó a load_interactions la sección encargada de cerciorarse de que el archivo de entrada exista y pueda ser leído.
    
-   # Se valida que exista el archivo de entrada. La línea subordinada a cada if lanzará un error, que será capturado por el bloque try-except de la función main, y se detendrá la ejecución del programa.
-   if not os.path.isfile(filename):
-      raise RuntimeError(f'Error: el archivo de entrada no existe. Por favor, revise la ruta proporcionada e intente de nuevo.')
-
-   # Se corrorobora que el usuario pueda leer el archivo. De lo contrario, se arroja un mensaje de error y se detiene la ejecución del programa.
-   if not os.access(filename, os.R_OK):
-      raise RuntimeError(f'Error: no se puede acceder al archivo de entrada, ya que usted no tiene permisos de lectura.')
-
    # Se regresan las rutas de los archivos de entrada y salida. También se retorna un dato que se usará más abajo: el número mínimo de genes de los TFs que figurarán en el archivo de salida. 
    return filename, output_file, args.min_genes
 
@@ -93,6 +82,21 @@ def load_interactions(filename):
     Interactions (str): Esta variable es una lista de tuplas, y cada una de ellas alberga tres strings: nombre de un TF, sus respectivos genes regulados, y el tipo de efecto regulatorio.
 
     """
+
+    # Se valida que exista el directorio parental del archivo de entrada. De lo contrario, se detectaría una ruta inválida y, por ende, un posible OSError. 
+    input_dir = os.path.dirname(filename)
+    if not os.path.exists(input_dir):
+        raise RuntimeError('Error: la ruta especificada es errónea. Por favor, revise lo que tecleó e intente de nuevo.')
+    
+
+    # Se valida que exista el archivo de entrada. Si ello fuera falso, se detectaría un FileNotFoundError. 
+    if not os.path.exists(filename):
+        raise RuntimeError('Error: el archivo de entrada no existe. Por favor, revise la ruta proporcionada e intente de nuevo.')
+    
+    # Se verifica que la ruta del archivo de entrada no sea un directorio. 
+    # De lo contrario, se detectaría un OSError al intentar abrir el archivo, ya que la ruta no podría aprovecharse para extraer la información demandada por interactions.
+    if os.path.isdir(filename):
+        raise RuntimeError('Error: la ruta especificada es un directorio, no un archivo. Por favor, revise la ruta proporcionada e intente de nuevo.')
 
     # Recepción y limpieza de los datos del archivo TSV.
     interactions = []
@@ -135,16 +139,14 @@ def load_interactions(filename):
                 # Creación de tuplas que sintetizan las interacciones en la red regulatoria.
                 interactions.append((TF, gene, effect))      
 
-         # Se reincorporaron las líneas de manejo de errores.
-    except FileNotFoundError:
-        raise RuntimeError(f'Error: el archivo de entrada no se encontró. Por favor, revise que el documento exista en la ruta proporcionada e intente de nuevo.')
+    # Se reincorporaron las líneas de manejo de errores.
     except PermissionError:
-        raise RuntimeError(f'Error: no se puede acceder al archivo de entrada, ya que usted no tiene permisos de lectura.')
+        raise RuntimeError('Error: no se puede acceder al archivo de entrada, ya que usted no tiene permisos de lectura.')
+    
+    # Aquí se detectarían ptros errores relacionados con la lectura del archivo de entrada. 
     except OSError as e:
-        raise RuntimeError(f'Error: la ruta del archivo de entrada es inválida. Intente de nuevo.')
-    except IOError as e:
-        raise RuntimeError(f'Error al intentar abrir o leer el archivo de entrada. Asegúrese de que el documento esté en buen estado y la ruta lleve al archivo correcto.')
-
+        raise RuntimeError(f'Error al intentar abrir o leer el archivo de entrada. Se presentó un error en el sistema operativo: {e}')
+    
     # Se devuelve la lista de tuplas con la información de los TFs, genes regulados y el tipo de efecto regulatorio.
     return interactions
 
