@@ -361,16 +361,27 @@ Resultado esperado:
 
 **Resultados**
 
+```
+Error: el archivo de entrada no existe. Por favor, revise la ruta proporcionada e intente de nuevo.
+```
+
+¿Coinciden con la salida esperada? Sí.
 
 <br>
 
 ### Falta de permisos (PermissionError)
 
-Entrada:
+Entrada (se intentó usar chmod 000 para bloquear el archivo, pero ese comando no funcionó):
 
 ```bash
-touch data/raw/bloqueado.tsv
-chmod 000 data/raw/bloqueado.tsv
+touch data/bloqueado.tsv
+```
+
+```PowerShell
+icacls .\data\bloqueado.tsv /deny --% %USERNAME%:(W)
+```
+
+```bash
 uv run python .\src\regulon_summary.py .\data\bloqueado.tsv results/output.tsv --min_genes 2
 
 ```
@@ -382,8 +393,11 @@ Resultado esperado:
 
 **Resultados**
 
+```
+Error: no se puede acceder al archivo de entrada, ya que usted no tiene permisos de lectura.
+```
 
-
+¿Coinciden con la salida esperada? Sí.
 
 <br>
 
@@ -403,6 +417,11 @@ Resultado esperado:
 
 **Resultados**
 
+```
+Error: la ruta especificada es errónea. Por favor, revise lo que tecleó e intente de nuevo.
+```
+
+¿Coinciden con la salida esperada? Sí.
 
 <br>
 
@@ -425,7 +444,11 @@ Resultado esperado:
 
 **Resultados**
 
+```
+Error: la ruta especificada es un directorio, no un archivo. Por favor, revise la ruta proporcionada e intente de nuevo.
+```
 
+¿Coinciden con la salida esperada? Sí.
 
 <br>
 
@@ -446,15 +469,17 @@ Resultado esperado:
 - Se envía un mensaje para indicar que la ruta seleccionada no puede usarse.  
 - El programa termina de manera ordenada. 
 
-
 **Resultados**
 
+```
+Error al intentar escribir el archivo de salida. Ocurrió un error en el sistema operativo: [Errno 2] No such file or directory: 'C:\\Users\\cecil\\python_2026\\regulatory-network\\fake\\output.tsv'
+```
 
+¿Coinciden con la salida esperada? Sí.
 
 <br>
 
 ### Carpetas inexistentes (FileNotFoundError)
-
 
 Entrada:
 
@@ -469,6 +494,12 @@ Resultado esperado:
 
 **Resultados**
 
+```
+El directorio del archivo de salida no existe. Recuerde que debe emplear la carpeta 'results' para almacenar aquel archivo.
+```
+
+¿Coinciden con la salida esperada? Sí.
+
 <br>
 
 ### Falta de permisos (PermissionError)
@@ -478,9 +509,14 @@ Entrada:
 
 ```bash
 mkdir salida_bloqueada
-chmod 000 salida_bloqueada
-uv run python .\src\regulon_summary.py .\data\raw\NetworkRegulatorGene.tsv salida_bloqueada/output.tsv --min_genes 2
+```
 
+```PowerShell
+icacls salida_bloqueada /deny --% %USERNAME%:(W) 
+```
+
+```bash
+uv run python .\src\regulon_summary.py .\data\raw\NetworkRegulatorGene.tsv salida_bloqueada/output.tsv --min_genes 2
 ```
 
 Resultado esperado:
@@ -488,6 +524,12 @@ Resultado esperado:
 - El programa termina de manera organizada. 
 
 **Resultados**
+
+```
+Error al intentar escribir el archivo de salida. Ocurrió un error en el sistema operativo: [Errno 13] Permission denied: 'C:\\Users\\cecil\\python_2026\\regulatory-network\\salida_bloqueada\\output.tsv'
+```
+
+¿Coinciden con la salida esperada? Sí.
 
 <br>
 
@@ -506,5 +548,9 @@ Resultado esperado:
 
 **Resultados**
 
+```
+La ruta del archivo de salida es inválida, ya que no menciona el nombre del documento. Por favor, revise los datos proporcionados e intente de nuevo.
+```
+¿Coinciden con la salida esperada? Sí.
 
 <br>
