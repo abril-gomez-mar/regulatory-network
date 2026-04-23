@@ -52,24 +52,20 @@ def parse_arguments():
    filename = os.path.abspath(os.path.join(project_root, args.input))
    output_file = os.path.abspath(os.path.join(project_root, args.output))
 
-   # Se crea el directorio del archivo de salida si no existe. Esta es la versión actualizada de la línea que creaba la carpeta 'results' si aún no existía.
-   os.makedirs(os.path.dirname(output_file), exist_ok=True)
-
+   # Se removió la línea que creaba el directorio 'results', si aún no existía. Por ende, el usuario siempre deberá señalar que el output se almacenará en dicha carpeta, y cualquier otra ruta será rechazada más adelante.
 
    # Manejo de errores relacionados con el input. 
 
    # Para mejorar la coherencia del código, se decidió colocar aquí la sección encargada de cerciorarse de que el archivo de entrada exista y pueda ser leído.
    # De este modo, la función load_interactions, mostrada más abajo, solo debe procesar los datos y construir la lista de interacciones.
    
-   # Se valida que exista el archivo de entrada. Las líneas subordinadas al if, que imprimirán un mensaje de error y terminarán el programa, se ejecutarán solo si l documento no está presente.
+   # Se valida que exista el archivo de entrada. La línea subordinada a cada if lanzará un error, que será capturado por el bloque try-except de la función main, y se detendrá la ejecución del programa.
    if not os.path.isfile(filename):
-      print(f'Error: el archivo de entrada no existe. Por favor, revise la ruta proporcionada e intente de nuevo.')
-      sys.exit(1)
+      raise RuntimeError(f'Error: el archivo de entrada no existe. Por favor, revise la ruta proporcionada e intente de nuevo.')
 
    # Se corrorobora que el usuario pueda leer el archivo. De lo contrario, se arroja un mensaje de error y se detiene la ejecución del programa.
    if not os.access(filename, os.R_OK):
-      print(f'Error: no se puede acceder al archivo de entrada, ya que usted no tiene permisos de lectura.')
-      sys.exit(1)
+      raise RuntimeError(f'Error: no se puede acceder al archivo de entrada, ya que usted no tiene permisos de lectura.')
 
    # Se regresan las rutas de los archivos de entrada y salida. También se retorna un dato que se usará más abajo: el número mínimo de genes de los TFs que figurarán en el archivo de salida. 
    return filename, output_file, args.min_genes
@@ -101,45 +97,53 @@ def load_interactions(filename):
     # Recepción y limpieza de los datos del archivo TSV.
     interactions = []
 
-    with open(filename) as f:
+    try: 
+        with open(filename) as f:
+            for line in f:
+                # Remoción de saltos de línea.
+                line = line.strip() 
 
-        for line in f:
-            # Remoción de saltos de línea.
-            line = line.strip() 
-
-            # Se verifica que las líneas no estén vacías.
-            if not line:
-                continue
-
-            # Verificación de que las líneas no sean comentarios.
-            if line.startswith('#'):
-                continue 
-            
-            # Inspección de que las líneas no pertenezan al encabezado, que comienza con '1)regulatorId'.
-            if line.startswith('1)regulatorId'):
-                continue
-
-            # Se dividen las líneas en campos utilizando el tabulador como separador.
-            fields = line.split('\t') 
-
-            # Validación del número mínimo de columnas requeridas para procesar la información. 
-            if len(fields) < 6:
+                # Se verifica que las líneas no estén vacías.
+                if not line:
                     continue
 
-            # Selección de las columnas que se utilizarán para construir la red regulatoria.
-            TF = fields[1]
-            gene = fields[4]
-            effect = fields[5]
+                # Verificación de que las líneas no sean comentarios.
+                if line.startswith('#'):
+                    continue 
+                
+                # Inspección de que las líneas no pertenezan al encabezado, que comienza con '1)regulatorId'.
+                if line.startswith('1)regulatorId'):
+                    continue
 
-            # Comprobación de que solo se incluirán los tres tipos válidos de efectos genéticos: activación ('+'), represión ('-') y efecto dual ('-+').
-            if effect not in ('+', '-', '-+'):
-                print(f'Advertencia. Efecto desconocido {effect} en la interacción entre {TF} y {gene}. Se omitirá esta interacción.')
-                continue
+                # Se dividen las líneas en campos utilizando el tabulador como separador.
+                fields = line.split('\t') 
 
-            # Creación de tuplas que sintetizan las interacciones en la red regulatoria.
-            interactions.append((TF, gene, effect))      
+                # Validación del número mínimo de columnas requeridas para procesar la información. 
+                if len(fields) < 6:
+                    continue
 
-    # En vista de que la función defining_routes valida la lectura y la existencia del archivo de entrada y por ende cualquier error detectado se manejará en esa parte, en la presente función ya no es necesario colocar las palabras 'try' y 'except' para contemplar dichos errores al intentar construir interactions.
+                # Selección de las columnas que se utilizarán para construir la red regulatoria.
+                TF = fields[1]
+                gene = fields[4]
+                effect = fields[5]
+
+                # Comprobación de que solo se incluirán los tres tipos válidos de efectos genéticos: activación ('+'), represión ('-') y efecto dual ('-+').
+                if effect not in ('+', '-', '-+'):
+                    print(f'Advertencia. Efecto desconocido {effect} en la interacción entre {TF} y {gene}. Se omitirá esta interacción.')
+                    continue
+
+                # Creación de tuplas que sintetizan las interacciones en la red regulatoria.
+                interactions.append((TF, gene, effect))      
+
+         # Se reincorporaron las líneas de manejo de errores.
+    except FileNotFoundError:
+        raise RuntimeError(f'Error: el archivo de entrada no se encontró. Por favor, revise que el documento exista en la ruta proporcionada e intente de nuevo.')
+    except PermissionError:
+        raise RuntimeError(f'Error: no se puede acceder al archivo de entrada, ya que usted no tiene permisos de lectura.')
+    except OSError as e:
+        raise RuntimeError(f'Error: la ruta del archivo de entrada es inválida. Intente de nuevo.')
+    except IOError as e:
+        raise RuntimeError(f'Error al intentar abrir o leer el archivo de entrada. Asegúrese de que el documento esté en buen estado y la ruta lleve al archivo correcto.')
 
     # Se devuelve la lista de tuplas con la información de los TFs, genes regulados y el tipo de efecto regulatorio.
     return interactions
@@ -216,50 +220,69 @@ def write_output(regulon, output_file, min_genes):
    Returns:
         Ninguno. La función solo transcribe la información en el archivo de salida, así que no debe regresar ningún valor particular.
    
-   """
+    """
 
-    # La información recopilada se plasma en el archivo de salida. Un tabulador separa cada dato. Se escribe la primera línea del documento.
-    with open(output_file, 'w') as outfile:
-        outfile.write('TF\tTotal genes\tActivados\tReprimidos\tTipo de efecto regulatorio\tLista de genes\n')
+    # En esta sección se validaría que la ruta del archivo de salida no solo sea un directorio. De lo contrario, habría un OSError porque la ruta sería inválida. 
+    if os.path.isdir(output_file):
+        raise RuntimeError("La ruta del archivo de salida es inválida, ya que no menciona el nombre del documento. Por favor, revise los datos proporcionados e intente de nuevo.")
 
-        # Los TFs se ordenan de manera alfabética y se itera sobre cada uno de ellos. 
-        for TF in sorted(regulon):
-            data = regulon[TF]
+    # Se revisaría que el directorio del archivo de salida existiera. De lo contrario, se identificaría un FileNotFoundError. 
+    output_dir = os.path.dirname(output_file)
+    if not os.path.exists(output_dir):
+        raise RuntimeError("El directorio del archivo de salida no existe. Recuerde que debe emplear la carpeta 'results' para almacenar aquel archivo.")
 
-            # Se acomoda de manera alfabética la lista de target genes de cada TF. Luego, se obtiene la cardinalidad de dicha lista.
-            genes = sorted(data["genes"])
-            total = len(genes)
+    # Aquí se detectaría si hubiera un PermissionError.
+    if not os.access(output_dir, os.W_OK):
+        raise RuntimeError("Usted no puede escribir en el directorio de salida. Por favor, revise sus permisos y vuelva a intentarlo.")
 
-            # Se crea un filtro con base en min_genes, que equivale al valor de args.min_genes definido en la función parse_arguments. 
-            # Solo si el valor de la variable 'total' es mayor o igual al mínimo de genes, el código subordinado al if no se ejecutará y por ende el TF se tomará en cuenta para escribir el archivo de salida. 
-            if total < min_genes:
-                continue   
+    try:
 
-            # Los target genes se concatenan en un string y solo son separados por comas, seguidas de un espacio.
-            lista_genes = ', '.join(genes)
+        # La información recopilada se plasma en el archivo de salida. Un tabulador separa cada dato. Se escribe la primera línea del documento.
+        with open(output_file, 'w') as outfile:
 
-            # Considerando los resultados de los contadores de genes activados y reprimidos, se pondera cuál es el efecto regulatorio de cada TF: activador, represor o dual. 
-            activados = data["activados"]
-            reprimidos = data["reprimidos"]
+            outfile.write('TF\tTotal genes\tActivados\tReprimidos\tTipo de efecto regulatorio\tLista de genes\n')
 
-            # En este escenario, los totales de cada contador son mayores que cero.
-            if activados and reprimidos:
-                efecto = 'Dual'
+            # Los TFs se ordenan de manera alfabética y se itera sobre cada uno de ellos. 
+            for TF in sorted(regulon):
+                data = regulon[TF]
 
-            # En esta instancia, solo el total de genes activados es mayor que cero, mientras que hay cero genes reprimidos.
-            elif activados and not reprimidos:
-                efecto = 'Activador'
+                # Se acomoda de manera alfabética la lista de target genes de cada TF. Luego, se obtiene la cardinalidad de dicha lista.
+                genes = sorted(data["genes"])
+                total = len(genes)
 
-            # En este caso, la cantidad de genes reprimidos es superior a cero, pero no hay genes activados.    
-            else:
-                efecto = 'Represor'
+                # Se crea un filtro con base en min_genes, que equivale al valor de args.min_genes definido en la función parse_arguments. 
+                # Solo si el valor de la variable 'total' es mayor o igual al mínimo de genes, el código subordinado al if no se ejecutará y por ende el TF se tomará en cuenta para escribir el archivo de salida. 
+                if total < min_genes:
+                    continue   
 
-            # En cada línea del archivo de salida se colocan los seis datos correspondientes a cada TF, separados por un tabulador.
-            outfile.write(f'{TF}\t{total}\t{activados}\t{reprimidos}\t{efecto}\t{lista_genes}\n')
+                # Los target genes se concatenan en un string y solo son separados por comas, seguidas de un espacio.
+                lista_genes = ', '.join(genes)
 
+                # Considerando los resultados de los contadores de genes activados y reprimidos, se pondera cuál es el efecto regulatorio de cada TF: activador, represor o dual. 
+                activados = data["activados"]
+                reprimidos = data["reprimidos"]
 
+                # En este escenario, los totales de cada contador son mayores que cero.
+                if activados and reprimidos:
+                    efecto = 'Dual'
+
+                # En esta instancia, solo el total de genes activados es mayor que cero, mientras que hay cero genes reprimidos.
+                elif activados and not reprimidos:
+                    efecto = 'Activador'
+
+                # En este caso, la cantidad de genes reprimidos es superior a cero, pero no hay genes activados.    
+                else:
+                    efecto = 'Represor'
+
+                # En cada línea del archivo de salida se colocan los seis datos correspondientes a cada TF, separados por un tabulador.
+                outfile.write(f'{TF}\t{total}\t{activados}\t{reprimidos}\t{efecto}\t{lista_genes}\n')
+
+    # Aquí se manejarían los errores relacionados con la escritura del archivo de salida.
+    except OSError as e:
+        raise RuntimeError(f'Error al intentar escribir el archivo de salida. Ocurrió un error en el sistema operativo: {e}')
+        
     # Dado que no se regresará ningún valor, al menos puede imprimirse un mensaje para indicarle al usuario que el archivo ya está disponible en la carpeta 'results'. 
-    print(f'El archivo regulon_summary.tsv puede consultarse en la carpeta "results".')
+    print(f'El archivo {output_file} puede consultarse en la carpeta "results".')
 
     # A raíz de que 'return 0' no estará asociado a ningún valor, estará vacío y por ello puede omitirse. 
 
@@ -271,18 +294,23 @@ def write_output(regulon, output_file, min_genes):
 def main():
     """ Función que ejecuta en el orden correcto las funciones mostradas más arriba. No recibe ningún argumento y tampoco regresa ningún valor. """
 
-    # Se definen las rutas de los archivos de entrada y salida.
-    filename, output_file, min_genes = parse_arguments()
+    try:
 
-    # Se carga el archivo de interacciones regulatorias y se obtiene una lista de tuplas con la información relevante.
-    interactions = load_interactions(filename)
+        # Se definen las rutas de los archivos de entrada y salida.
+        filename, output_file, min_genes = parse_arguments()
 
-    # Se construye un diccionario a partir de la lista de tuplas.
-    regulon = build_regulon(interactions)
+        # Se carga el archivo de interacciones regulatorias y se obtiene una lista de tuplas con la información relevante.
+        interactions = load_interactions(filename)
 
-    # Se genera el archivo de salida con la información del diccionario.
-    write_output(regulon, output_file, min_genes)
+        # Se construye un diccionario a partir de la lista de tuplas.
+        regulon = build_regulon(interactions)
 
+        # Se genera el archivo de salida con la información del diccionario.
+        write_output(regulon, output_file, min_genes)
+
+    except RuntimeError as e:
+        print(e)
+        sys.exit(1)
 #==================================================================================================================================================================================================================================
 # Se llama a la función principal para ejecutar el programa.
 # =================================================================================================================================================================================================================================
