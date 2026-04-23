@@ -554,3 +554,276 @@ La ruta del archivo de salida es inválida, ya que no menciona el nombre del doc
 ¿Coinciden con la salida esperada? Sí.
 
 <br>
+
+3. Validaciones adicionales 
+
+### Líneas mal formadas en el archivo (ValueError)
+
+Entrada:
+
+```bash
+touch data/raw/lineas_formato_err.tsv
+nano data/raw/lineas_formato_err.tsv
+```
+
+Este será el contenido de ese archivo (son líneas modificadas del archivo original de entrada). Se aprecia que, para separar las columnas, se usan espaciadores en vez de tabuladores; por ello, puede aseverarse que las líneas no tienen la forma correcta:
+
+```
+RDBECOLIPDC00031 AcnB acnB RDBECOLIGNC02188	acnB + W 
+RDBECOLIPDC00328 DicF dicF RDBECOLIGNC00341	ftsZ - S 
+RDBECOLIPDC00328 DicF dicF RDBECOLIGNC00559	manX - S 
+RDBECOLIPDC00328 DicF dicF RDBECOLIGNC00793	pykA - S 
+RDBECOLIPDC00328 DicF dicF RDBECOLIGNC02444	xylR - S 
+
+```
+
+```bash
+uv run python .\src\regulon_summary.py .\data\raw\lineas_formato_err.tsv results/filtered_output.tsv --min_genes 2
+```
+
+
+Resultados esperados:
+- El usuario recibe un mensaje indicando que las líneas no tienen el formato apropiado.
+- El programa termina de manera ordenada. 
+
+**Resultados**
+
+
+<br>
+
+### Número incorrecto de columnas (validación manual)
+
+Decisión: Solo se añadirá un mensaje para informarle al usuario que el archivo de entrada tiene menos columnas que las requeridas para construir interactions. Se llegó a esa resolución porque ya existe este fragmento en el programa:
+
+```python
+fields = line.split('\t') 
+
+# Validación del número mínimo de columnas requeridas para procesar la información. 
+    if len(fields) < 6:
+        continue
+```
+
+Resultados esperados:
+- El usuario recibe un mensaje si en algún momento el documento de entrada no cumple con el número mínimo de columnas para hacer el análisis (6, numerando desde el 0).
+
+**Resultados**
+
+<br>
+
+### Valores inesperados en los campos (ValueError)
+
+Entrada:
+
+```bash
+touch data/raw/lineas_raras.tsv
+nano data/raw/lineas_raras.tsv
+```
+
+Este será el contenido de ese archivo (son líneas modificadas del archivo original de entrada). Se vislumbra que en el campo donde están los nombres de los factores de transcripción (la segunda columna) hay números, que representan caracteres anómalos. 
+
+```
+RDBECOLIPDC00031	Acn77B	acnB	RDBECOLIGNC02188	acnB	+	W 
+RDBECOLIPDC00328	DicF	dicF	RDBECOLIGNC00341	ftsZ	-	S 
+RDBECOLIPDC00328	Di55cF	dicF	RDBECOLIGNC00559	manX	-	S 
+RDBECOLIPDC00328	Di9cF	dicF	RDBECOLIGNC00793	pykA	-	S 
+RDBECOLIPDC00328	Di0cF	dicF	RDBECOLIGNC02444	xylR	-	S 
+
+```
+
+```bash
+uv run python .\src\regulon_summary.py .\data\raw\lineas_raras.tsv results/filtered_output.tsv --min_genes 2
+```
+
+
+Resultados esperados:
+- El usuario recibe un mensaje indicando que se identificaron valores inesperados en los campos. 
+- El programa termina de manera ordenada. 
+
+**Resultados**
+
+
+<br>
+
+### Argumento --min_genes negativo o inválido (ValueError)
+
+Entrada:
+
+```bash
+uv run python .\src\regulon_summary.py .\data\raw\NetworkRegulatorGene.tsv results/filtered_output.tsv --min_genes -5
+```
+
+Resultados esperados:
+- El usuario recibe un mensaje indicando que el valor de min_genes no puede ser negativo.
+- El programa termina de manera ordenada. 
+
+**Resultados**
+
+<br>
+
+### Argumentos incorrectos (argparse.ArgumentTypeError)
+
+Entrada: 
+
+Dado que el programa está diseñado para parsear un archivo TSV, puede añadirse una validación para que solo se acepten documentos que tengan ese formato. 
+
+```bash
+uv run python .\src\regulon_summary.py .\data\raw\formato_erroneo.pdf results/filtered_output.tsv --min_genes 2
+
+```
+
+Resultados esperados:
+- El usuario recibe un mensaje indicando que el formato del archivo de entrada debe ser TSV. 
+- El programa termina de forma ordenada. 
+
+**Resultados**
+
+<br>
+
+### Archivo vacío (validación manual)
+
+Entrada:
+
+```bash
+touch data/raw/vacio.tsv
+uv run python .\src\regulon_summary.py .\data\raw\vacio.tsv results/filtered_output.tsv --min_genes 2
+```
+
+Resultados esperados:
+- El usuario recibe un mensaje indicando que el archivo está vacío.
+- El programa finaliza de manera ordenada. 
+
+**Resultados**
+
+<br>
+
+### Tipos de datos incorrectos (TypeError)
+
+Entrada:
+
+```bash
+touch data/raw/sin_cadenas.tsv
+nano data/raw/sin_cadenas.tsv
+```
+
+Este será el contenido de ese archivo. Se constata que solo consiste en números, así que sobre este tipo de dato no podrán apicarse los métodos mostrados en el programa (p. ej., ".strip()", ".startswith()", entre otros).  
+
+```
+31	64	32		
+38	21	09		
+8	15	18		
+03	86	27	
+22  10	14	
+
+```
+
+```bash
+uv run python .\src\regulon_summary.py .\data\raw\sin_cadenas.tsv results/filtered_output.tsv --min_genes 2
+```
+
+Resultados esperados:
+- El usuario recibe un mensaje señalando que el archivo no tiene los tipos de datos adecuados.
+- El programa termina de manera ordenada. s
+
+**Resultados**
+
+
+<br>
+
+### Interactions está vacío, ya que el archivo de entrada solo tenía comentarios
+
+Entrada:
+
+```bash
+touch data/raw/comentarios.tsv
+nano data/raw/comentarios.tsv
+```
+
+Este será el contenido del documento:
+```
+# License
+#	# RegulonDB is free for academic/noncommercial use
+# User is not entitled to change or erase data sets of the RegulonDB
+# database or to eliminate copyright notices from RegulonDB. Furthermore,
+# User is not entitled to expand RegulonDB or to integrate RegulonDB partly
+# or as a whole into other databank systems, without prior written consent
+# from CCG-UNAM.
+# Please check the license at https://regulondb.ccg.unam.mx/manual/aboutUs/terms-conditions
+# Citation
+#	# Heladia Salgado, Socorro Gama-Castro, et al., RegulonDB v12.0: a comprehensive resource of transcriptional regulation in E. coli K-12,
+# Nucleic Acids Research, 2023;, gkad1072, https://doi.org/10.1093/nar/gkad1072
+# RegulonDB Release: 14.5
+# Contact
+#	email:regulondb@ccg.unam.mx
+#Date:
+#	03-04-2026
+## Columns:
+## (1) regulatorId. Regulator identifier
+## (2) regulatorName. Regulator Name
+## (3) regulatorGeneName. Gene(s) coding for the TF
+## (4) regulatedId. Gene ID regulated by the Regulator (regulated Gene)
+## (5) regulatedName. Gene regulated by the Regulator (regulated Gene)
+## (6) function. Regulatory Function of the Regulator on the regulated Gene (+ activator, - repressor, -+ dual, ? unknown)
+## (7) confidenceLevel. RI confidence level based on its evidence (Values: Confirmed[C], Strong[S], Weak[W], Unknown[?])
+
+```
+
+
+```bash
+uv run python .\src\regulon_summary.py .\data\raw\comentarios.tsv results/filtered_output.tsv --min_genes 2
+```
+
+
+Resultados esperados:
+- El usuario recibe un mensaje indicando que el archivo de entrada solo tenía comentarios.
+- El programa termina de manera ordenada. 
+
+**Resultados**
+
+<br>
+
+### Hay líneas duplicadas en las columnas tomadas para construir interactions
+
+Entrada:
+
+```bash
+touch data/raw/duplicados.tsv
+nano data/raw/duplicados.tsv
+```
+
+Este será el contenido del nuevo archivo. Se tomaron algunos renglones del documento original y se duplicaron o incluso triplicaron (p. ej., el gen rbsK ahora aparece tres veces):
+
+```
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC00450	hns	-	S 
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC00502	rpoS	+	W 
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC00539	lrp	-	S 
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC00804	rbsA	-	S 
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC00805	rbsB	-	S 
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC00806	rbsC	-	S 
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC00807	rbsD	-	S 
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC00808	rbsK	-	S 
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC00808	rbsK	-	S 
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC00808	rbsK	-	S 
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC00809	rbsR	-	S 
+RDBECOLIPDC00358	DsrA	dsrA	RDBECOLIGNC02853	rbsZ	-	S 
+RDBECOLIPDC00425	DeaD	deaD	RDBECOLIGNC01227	ldtD	+	W 
+RDBECOLIPDC00425	DeaD	deaD	RDBECOLIGNC01227	ldtD	+	W 
+RDBECOLIPDC00501	Hfq	hfq	RDBECOLIGNC00559	manX	-	C 
+RDBECOLIPDC00501	Hfq	hfq	RDBECOLIGNC01622	hpf	+	W 
+RDBECOLIPDC00501	Hfq	hfq	RDBECOLIGNC01623	ptsN	-	W 
+
+```
+
+Se ocupará este comando para correr el programa:
+
+```bash
+uv run python .\src\regulon_summary.py .\data\raw\duplicados.tsv results/filtered_output.tsv --min_genes 2
+```
+
+Resultados esperados:
+- La presencia de líneas duplicadas no altera la construcción del regulon.
+- El archivo de salida no toma en cuenta las líneas duplicadas que brindan datos sobre los TFs.
+
+**Resultados**
+
+
+<br>

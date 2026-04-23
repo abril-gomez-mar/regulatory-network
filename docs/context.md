@@ -87,3 +87,13 @@ El programa debe permitir filtrar los TFs mostrando solo aquellos que tengan al 
 Problema: Mejorar la robustez del programa actual. 
 
 Nuevos requisitos: Debe incorporarse el manejo de errores en operaciones de entrada y salida; asimismo, es menester extender la validación del programa cuando sea necesario. 
+
+<br>
+
+## Actualización v1.5
+
+Problema: Identificar en qué secciones adicionales el programa podría fallar.
+
+Nuevos requisitos: Incrementar el total de validaciones del programa, para que la mayor cantidad de escenarios funestos sean contemplados por el código y por ende no se generen outputs erróneos. Entre dichos escenarios podría figurar la falta de contenido en el archivo de entrada, el hecho de que haya valores inesperados en los campos, etc. 
+
+Asimismo, sería deseable examinar si algunas de dichas validaciones pueden hacerse desde el main, dado que desde allí se controla la ejecución del programa.

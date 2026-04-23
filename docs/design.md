@@ -82,3 +82,14 @@ Diseño:
 - Agregar líneas que detallen los tipos de errores que ocurrieron en la lectura o escritura del archivo, tratándolos como una clase de returns.
 - Invocar dichos returns desde el main() del programa.
 - Añadir mensajes concisos que expliquen cuáles problemas se presentaron al correr el programa. 
+
+<br>
+
+## Actualización v1.5
+
+Se mejora el programa, considerando otros posibles errores de ejecución o validaciones faltantes.
+
+Diseño:
+- Checar en qué partes el programa podría fallar.
+- A partir de las áreas de oportunidad identificadas, proponer validaciones que no involucren abusar de try/except. Podría analizarse cómo actuar si el archivo de entrada estuviera vacío, se observaran valores extraños en los campos, etcétera.  
+- Revisar si es posible hacer algunas validaciones desde el main() del programa. 
