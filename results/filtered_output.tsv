@@ -1,0 +1,3 @@
+TF	Total genes	Activados	Reprimidos	Tipo de efecto regulatorio	Lista de genes
+DicF	3	0	3	Represor	ftsZ, manX, pykA
+ppGpp	9	9	0	Activador	blc, fkpA, ilvG, iraD, yhbO, yhcO, yjfY, yjgH, ysgA

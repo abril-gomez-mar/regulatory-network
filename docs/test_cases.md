@@ -272,7 +272,6 @@ LexA 1 0 1 Represor
 
 
 ## Command Line Interface (CLI)
-# reminder: merge tests file with this one (one commit; explain logic to renconciliate names)
 
 Caso: Correr el programa con paso de argumentos.
 
@@ -588,6 +587,11 @@ Resultados esperados:
 
 **Resultados**
 
+```
+Error: el archivo usa espacios en lugar de tabuladores, así que no se puede procesar. Por favor, revise el documento de entrada e intente de nuevo.
+```
+
+¿Coinciden con los resultados esperados? Sí. 
 
 <br>
 
@@ -604,9 +608,37 @@ fields = line.split('\t')
 ```
 
 Resultados esperados:
-- El usuario recibe un mensaje si en algún momento el documento de entrada no cumple con el número mínimo de columnas para hacer el análisis (6, numerando desde el 0).
+- El usuario recibe un mensaje si en algún momento el documento de entrada no cumple con el número mínimo de columnas para hacer el análisis (6, numerando desde el 0). 
+
+Para validar los resultados, se creará un nuevo documento:
+
+```bash
+touch data/raw/columnas_insuficientes.tsv
+nano data/raw/columnas_insuficientes.tsv
+```
+
+Este será el contenido del archivo:
+
+```
+RDBECOLIPDC00328        random
+RDBECOLIPDC00328        random
+
+```
+
+Ahora, se ejecutará este comando:
+
+```bash
+uv run python .\src\regulon_summary.py .\data\raw\columnas_insuficientes.tsv results/filtered_output.tsv --min_genes 2
+```
 
 **Resultados**
+
+```
+Error: el archivo contiene al menos una línea con columnas insuficientes. Por favor, revise ese documento e intente de nuevo.
+
+```
+
+Los resultados coinciden con la salida esperada.  
 
 <br>
 
@@ -619,14 +651,14 @@ touch data/raw/lineas_raras.tsv
 nano data/raw/lineas_raras.tsv
 ```
 
-Este será el contenido de ese archivo (son líneas modificadas del archivo original de entrada). Se vislumbra que en el campo donde están los nombres de los factores de transcripción (la segunda columna) hay números, que representan caracteres anómalos. 
+Enseguida se muestra el contenido de ese archivo (son líneas modificadas del archivo original de entrada). Se vislumbra que en el campo donde están los nombres de los factores de transcripción (la segunda columna) hay números, que representan un exceso de caracteres anómalos. Se tomó esa decisión tras revisar el output original en `results/regulon_summary.tsv` y notar que un TF (llamado C0293) tenía 4 números consecutivos en su nombre.
 
 ```
-RDBECOLIPDC00031	Acn77B	acnB	RDBECOLIGNC02188	acnB	+	W 
+RDBECOLIPDC00031	Acn7877B	acnB	RDBECOLIGNC02188	acnB	+	W 
 RDBECOLIPDC00328	DicF	dicF	RDBECOLIGNC00341	ftsZ	-	S 
-RDBECOLIPDC00328	Di55cF	dicF	RDBECOLIGNC00559	manX	-	S 
-RDBECOLIPDC00328	Di9cF	dicF	RDBECOLIGNC00793	pykA	-	S 
-RDBECOLIPDC00328	Di0cF	dicF	RDBECOLIGNC02444	xylR	-	S 
+RDBECOLIPDC00328	Di533375cF	dicF	RDBECOLIGNC00559	manX	-	S 
+RDBECOLIPDC00328	Di2957cF	dicF	RDBECOLIGNC00793	pykA	-	S 
+RDBECOLIPDC00328	Di10600cF	dicF	RDBECOLIGNC02444	xylR	-	S 
 
 ```
 
@@ -640,7 +672,10 @@ Resultados esperados:
 - El programa termina de manera ordenada. 
 
 **Resultados**
-
+```
+Error: se encontró un TF con una denominación inválida; recuerde que ninguna puede contener cinco o más dígitos consecutivos. Por favor, revise el archivo de entrada e intente de nuevo.
+```
+¿Coinciden con los valores esperados? Sí. 
 
 <br>
 
@@ -653,10 +688,16 @@ uv run python .\src\regulon_summary.py .\data\raw\NetworkRegulatorGene.tsv resul
 ```
 
 Resultados esperados:
-- El usuario recibe un mensaje indicando que el valor de min_genes no puede ser negativo.
+- El usuario recibe un mensaje indicando que el valor de min_genes no puede ser negativo o demasiado grande (mayor a 1000, que parece un tope sensato porque el total de genes asociados a un TF en `results/regulon_summary.tsv` nunca sobrepasó 587, y aumentar el límite superior permitiría procesar archivos de redes regulatorias en otros organismos). 
 - El programa termina de manera ordenada. 
 
 **Resultados**
+
+```
+Error: si usted coloca el argumento opcional --min_genes, no puede usar un valor negativo o superior a 1000. Intente de nuevo.
+
+```
+¿Coinciden con los resultados esperados? Sí. 
 
 <br>
 
@@ -664,7 +705,7 @@ Resultados esperados:
 
 Entrada: 
 
-Dado que el programa está diseñado para parsear un archivo TSV, puede añadirse una validación para que solo se acepten documentos que tengan ese formato. 
+Dado que el programa está diseñado para parsear un archivo TSV, puede añadirse una validación para que solo se acepten documentos que tengan ese formato. En ese orden de ideas, se creó en Word un archivo PDF y se pegaron las líneas de comentarios del archivo original de entrada, así como algunas columnas que albergaban información sobre los TFs y sus genes. Después, se envió una copia de ese documento a la carpeta `data/raw`. A continuación, se ejecutó este comando: 
 
 ```bash
 uv run python .\src\regulon_summary.py .\data\raw\formato_erroneo.pdf results/filtered_output.tsv --min_genes 2
@@ -676,6 +717,12 @@ Resultados esperados:
 - El programa termina de forma ordenada. 
 
 **Resultados**
+
+```
+El archivo de entrada .\data\raw\formato_erroneo.pdf debe ser .tsv o .txt. Por favor, revise que haya seleccionado el archivo correcto e intente de nuevo.
+```
+
+¿Coinciden con los resultados esperados? Sí. 
 
 <br>
 
@@ -693,6 +740,11 @@ Resultados esperados:
 - El programa finaliza de manera ordenada. 
 
 **Resultados**
+```
+Error: el archivo de entrada está vacío. Por favor, revise el documento e intente de nuevo.
+```
+¿Coinciden con la salida esperada? Sí. 
+
 
 <br>
 
@@ -726,6 +778,10 @@ Resultados esperados:
 
 **Resultados**
 
+```
+Error: el archivo contiene únicamente valores numéricos, pero se anticipaban cadenas para TF y genes. Por favor, revise el documento de entrada e intente de nuevo.
+```
+¿Coinciden con la salida esperada? Sí. 
 
 <br>
 
@@ -767,6 +823,7 @@ Este será el contenido del documento:
 
 ```
 
+A continuación, se ejecutó este comando:
 
 ```bash
 uv run python .\src\regulon_summary.py .\data\raw\comentarios.tsv results/filtered_output.tsv --min_genes 2
@@ -778,6 +835,12 @@ Resultados esperados:
 - El programa termina de manera ordenada. 
 
 **Resultados**
+
+```
+Error: el archivo de entrada solo tiene comentarios. Por favor, revise el documento e intente de nuevo.
+```
+
+¿Coinciden con la salida esperada? Sí. 
 
 <br>
 
@@ -816,7 +879,7 @@ RDBECOLIPDC00501	Hfq	hfq	RDBECOLIGNC01623	ptsN	-	W
 Se ocupará este comando para correr el programa:
 
 ```bash
-uv run python .\src\regulon_summary.py .\data\raw\duplicados.tsv results/filtered_output.tsv --min_genes 2
+uv run python .\src\regulon_summary.py .\data\raw\duplicados.tsv results/filtered_output.tsv --min_genes 1
 ```
 
 Resultados esperados:
@@ -825,5 +888,17 @@ Resultados esperados:
 
 **Resultados**
 
+Este es el contenido del archivo de salida:
+
+```
+TF      Total genes     Activados       Reprimidos      Tipo de efecto regulatorio      Lista de genes
+DeaD    1       2       0       Activador       ldtD
+DsrA    10      1       11      Dual    hns, lrp, rbsA, rbsB, rbsC, rbsD, rbsK, rbsR, rbsZ, rpoS
+Hfq     3       1       2       Dual    hpf, manX, ptsN
+
+```
+Se reconoció que Hfq estaba asociado a 3 tgs diferentes, mientras que DeaD solo se vinculaba con el gen ldtD. También se identificó que había 10 diferentes target genes relacionados con DsrA y solo se triplicó la entrada del gen rbsK. 
+
+¿Los resultados coinciden con la salida esperada? Sí. 
 
 <br>
