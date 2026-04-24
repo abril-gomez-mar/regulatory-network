@@ -33,7 +33,7 @@ def parse_arguments():
    
    """
 
-   parser = argparse.ArgumentParser(description="Rutas relativas (respecto a la raíz del proyecto) de los archivos de entrada y salida.")
+   parser = argparse.ArgumentParser(description='Rutas relativas (respecto a la raíz del proyecto) de los archivos de entrada y salida.')
 
    # Definir los argumentos posicionales.
    parser.add_argument('input', help='Ruta relativa del archivo TSV de entrada.')
@@ -43,6 +43,10 @@ def parse_arguments():
    parser.add_argument('--min_genes', type=int, default=1, help='Número mínimo de genes asociados a cada uno de los TFs que se desea incluir en el archivo de salida.')
    
    args = parser.parse_args()
+
+   # Validación de que el archivo de entrada tiene la extensión .tsv o .txt (se ha atestiguado que un archivo con extensión .txt puede contener tabuladores, así que se aceptará esa extensión).
+   if not args.input.lower().endswith(('.tsv', '.txt')):
+        raise argparse.ArgumentTypeError(f'El archivo de entrada {args.input} debe ser .tsv o .txt. Por favor, revise que haya seleccionado el archivo correcto e intente de nuevo.')
 
    # Se establece la ruta absoluta de la raíz del proyecto, para lo cual se obtiene la ruta del directorio actual y luego se accede a su carpeta parental.
    current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -82,19 +86,15 @@ def load_interactions(filename):
     Interactions (str): Esta variable es una lista de tuplas, y cada una de ellas alberga tres strings: nombre de un TF, sus respectivos genes regulados, y el tipo de efecto regulatorio.
 
     """
-
-    # Se valida que exista el directorio parental del archivo de entrada. De lo contrario, se detectaría una ruta inválida y, por ende, un posible OSError. 
+    # Validaciones relaciondas con la ruta del archivo de entrada. 
+    
     input_dir = os.path.dirname(filename)
     if not os.path.exists(input_dir):
         raise RuntimeError('Error: la ruta especificada es errónea. Por favor, revise lo que tecleó e intente de nuevo.')
     
-
-    # Se valida que exista el archivo de entrada. Si ello fuera falso, se detectaría un FileNotFoundError. 
     if not os.path.exists(filename):
         raise RuntimeError('Error: el archivo de entrada no existe. Por favor, revise la ruta proporcionada e intente de nuevo.')
     
-    # Se verifica que la ruta del archivo de entrada no sea un directorio. 
-    # De lo contrario, se detectaría un OSError al intentar abrir el archivo, ya que la ruta no podría aprovecharse para extraer la información demandada por interactions.
     if os.path.isdir(filename):
         raise RuntimeError('Error: la ruta especificada es un directorio, no un archivo. Por favor, revise la ruta proporcionada e intente de nuevo.')
 
@@ -103,6 +103,8 @@ def load_interactions(filename):
 
     try: 
         with open(filename) as f:
+            if not f.read(1): 
+                raise ValueError('Error: el archivo de entrada está vacío. Por favor, revise el documento e intente de nuevo.')
             for line in f:
                 # Remoción de saltos de línea.
                 line = line.strip() 
@@ -119,17 +121,31 @@ def load_interactions(filename):
                 if line.startswith('1)regulatorId'):
                     continue
 
-                # Se dividen las líneas en campos utilizando el tabulador como separador.
-                fields = line.split('\t') 
+                if '\t' not in line and ' ' in line:
+                    raise ValueError('Error: el archivo usa espacios en lugar de tabuladores, así que no se puede procesar. Por favor, revise el documento de entrada e intente de nuevo.')
 
-                # Validación del número mínimo de columnas requeridas para procesar la información. 
+                # Se dividen las líneas en campos utilizando el tabulador como separador. En la línea previa se validó que el archivo separa sus datos con tabuladores, así que esta división debería ser exitosa.
+                fields = line.split('\t')
+
+                # Validaciones sobre los tipos de datos y el número de columnas del archivo de entrada.  
+                if all(f.strip().isdigit() for f in fields if f.strip()):
+                    raise TypeError('Error: el archivo contiene únicamente valores numéricos, pero se anticipaban cadenas para TF y genes. Por favor, revise el documento de entrada e intente de nuevo.')
+ 
                 if len(fields) < 6:
-                    continue
+                    raise ValueError(f'Error: el archivo contiene al menos una línea con columnas insuficientes. Por favor, revise ese documento e intente de nuevo.')
 
-                # Selección de las columnas que se utilizarán para construir la red regulatoria.
+                # Selección de las columnas que se utilizarán para construir la red regulatoria. Más adelante, se revisará que los nombres de los TFs no sean anómalos. 
                 TF = fields[1]
                 gene = fields[4]
                 effect = fields[5]
+
+                if TF.isdigit() or gene.isdigit():
+                    raise TypeError(f'Error: tipo de dato incorrecto. Se esperaba un nombre (string) pero se encontró un valor numérico en un TF, un gen o ambos. Por favor, revise el archivo de entrada e intente de nuevo.')
+                
+                tf_digits = ''.join('T' if c.isdigit() else 'F' for c in TF)
+
+                if 'TTTTT' in tf_digits:
+                    raise ValueError(f'Error: se encontró un TF con una denominación inválida; recuerde que ninguna puede contener cinco o más dígitos consecutivos. Por favor, revise el archivo de entrada e intente de nuevo.')
 
                 # Comprobación de que solo se incluirán los tres tipos válidos de efectos genéticos: activación ('+'), represión ('-') y efecto dual ('-+').
                 if effect not in ('+', '-', '-+'):
@@ -142,8 +158,7 @@ def load_interactions(filename):
     # Se reincorporaron las líneas de manejo de errores.
     except PermissionError:
         raise RuntimeError('Error: no se puede acceder al archivo de entrada, ya que usted no tiene permisos de lectura.')
-    
-    # Aquí se detectarían ptros errores relacionados con la lectura del archivo de entrada. 
+     
     except OSError as e:
         raise RuntimeError(f'Error al intentar abrir o leer el archivo de entrada. Se presentó un error en el sistema operativo: {e}')
     
@@ -178,11 +193,11 @@ def build_regulon(interactions):
 
     # Se preservó la idea central del código original: procesar la lista de tuplas para crear un diccionario de la red regulatoria. Cada key (TF) tendrá esta tupla: (gen, efecto del TF).
     # A partir del diccionario, se obtienen los seis datos que se colocarán en cada línea del archivo de salida: el nombre del TF, el total de genes regulados, el número de genes activados, la cantidad de genes reprimidos, el tipo de regulación (activador, represor o dual) y los nombres de los citados genes.
-    regulon = defaultdict(lambda: {"genes": [],"activados": 0,"reprimidos": 0})
+    regulon = defaultdict(lambda: {"genes": set(),"activados": 0,"reprimidos": 0})
 
     for TF, gene, effect in interactions:
         data = regulon[TF]
-        data['genes'].append(gene)
+        data['genes'].add(gene)
 
         if effect == '+':
            data['activados'] += 1
@@ -226,16 +241,16 @@ def write_output(regulon, output_file, min_genes):
 
     # En esta sección se validaría que la ruta del archivo de salida no solo sea un directorio. De lo contrario, habría un OSError porque la ruta sería inválida. 
     if os.path.isdir(output_file):
-        raise RuntimeError("La ruta del archivo de salida es inválida, ya que no menciona el nombre del documento. Por favor, revise los datos proporcionados e intente de nuevo.")
+        raise RuntimeError('La ruta del archivo de salida es inválida, ya que no menciona el nombre del documento. Por favor, revise los datos proporcionados e intente de nuevo.')
 
     # Se revisaría que el directorio del archivo de salida existiera. De lo contrario, se identificaría un FileNotFoundError. 
     output_dir = os.path.dirname(output_file)
     if not os.path.exists(output_dir):
-        raise RuntimeError("El directorio del archivo de salida no existe. Recuerde que debe emplear la carpeta 'results' para almacenar aquel archivo.")
+        raise RuntimeError('El directorio del archivo de salida no existe. Recuerde que debe emplear la carpeta results para almacenar aquel archivo.')
 
     # Aquí se detectaría si hubiera un PermissionError.
     if not os.access(output_dir, os.W_OK):
-        raise RuntimeError("Usted no puede escribir en el directorio de salida. Por favor, revise sus permisos y vuelva a intentarlo.")
+        raise RuntimeError('Usted no puede escribir en el directorio de salida. Por favor, revise sus permisos y vuelva a intentarlo.')
 
     try:
 
@@ -298,11 +313,18 @@ def main():
 
     try:
 
-        # Se definen las rutas de los archivos de entrada y salida.
+        # Se definen las rutas de los archivos de entrada y salida. 
         filename, output_file, min_genes = parse_arguments()
+
+        if min_genes < 0 or min_genes > 1000:
+            raise ValueError(f'Error: si usted coloca el argumento opcional --min_genes, no puede usar un valor negativo o superior a 1000. Intente de nuevo.')
 
         # Se carga el archivo de interacciones regulatorias y se obtiene una lista de tuplas con la información relevante.
         interactions = load_interactions(filename)
+
+        # En caso de que el archivo de entrada solo tenga comentarios y por ende interactions quede vacía, el usuario recibe una advertencia y se detiene la ejecución del programa.
+        if not interactions:
+            raise ValueError('Error: el archivo de entrada solo tiene comentarios. Por favor, revise el documento e intente de nuevo.')
 
         # Se construye un diccionario a partir de la lista de tuplas.
         regulon = build_regulon(interactions)
@@ -310,7 +332,7 @@ def main():
         # Se genera el archivo de salida con la información del diccionario.
         write_output(regulon, output_file, min_genes)
 
-    except RuntimeError as e:
+    except Exception as e:
         print(e)
         sys.exit(1)
 #==================================================================================================================================================================================================================================
